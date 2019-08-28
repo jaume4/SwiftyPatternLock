@@ -53,7 +53,12 @@ class ViewController: UIViewController {
     var drawingLayer: CAShapeLayer!
     var centers: [CGPoint]!
     var minDistance: CGFloat!
-    var passedPoints: [Int]!
+    var passedPoints: [Int]! {
+        didSet {
+            updateViews()
+        }
+    }
+    var numberOfItemsPerRow = 4
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,13 +68,13 @@ class ViewController: UIViewController {
         var index = 0
         var stacks = [UIStackView]()
 
-        for _ in 0..<3 {
+        for _ in 0..<numberOfItemsPerRow {
             let stack = UIStackView()
             stack.axis = .horizontal
             stack.translatesAutoresizingMaskIntoConstraints = false
             stack.distribution = .fillEqually
             stacks.append(stack)
-            for _ in 0..<3 {
+            for _ in 0..<numberOfItemsPerRow {
                 let view = UIView()
                 view.accessibilityIdentifier = "\(index)"
                 index += 1
@@ -98,6 +103,15 @@ class ViewController: UIViewController {
 
     }
 
+    func updateViews() {
+        passedPoints.forEach{
+            let stack = $0 / numberOfItemsPerRow
+            let index = $0 % numberOfItemsPerRow
+            let childStack = parentStack.arrangedSubviews[stack] as! UIStackView
+            childStack.arrangedSubviews[index].backgroundColor = .orange
+        }
+    }
+
     @objc func didMove(gesture: UIPanGestureRecognizer) {
 
         switch gesture.state {
@@ -108,8 +122,6 @@ class ViewController: UIViewController {
             let nearest = nearestPoint(from: locationOfBeganTap)
             passedPoints = [nearest.index]
             locationOfBeganTap = centers[nearest.index]
-//            let stack = minIndex / 3
-//            let index = minIndex % 3
             locationOfEndTap = gesture.location(in: containerView)
             draw(index: nearest.index, distance: nearest.distance)
         case .changed:
@@ -130,6 +142,14 @@ class ViewController: UIViewController {
         recalculatedCenters = false
     }
 
+    func isDiagonal(index1: Int, index2: Int) -> Bool {
+        let index1x = index1 / numberOfItemsPerRow
+        let index1y = index1 % numberOfItemsPerRow
+        let index2x = index2 / numberOfItemsPerRow
+        let index2y = index2 % numberOfItemsPerRow
+        return abs(index1x-index2x) == abs(index1y - index2y)
+    }
+
     func calculatePointCenters() {
 
         if recalculatedCenters { return }
@@ -139,6 +159,8 @@ class ViewController: UIViewController {
             (stack as! UIStackView).arrangedSubviews.compactMap{
 
                 if $0.accessibilityIdentifier == "0" { minDistance = $0.frame.width / 3 }
+                $0.backgroundColor = .blue
+                $0.layer.cornerRadius = $0.frame.width / 2
                 return $0.convert($0.bounds, to: containerView).center
             }
         }
@@ -155,7 +177,7 @@ class ViewController: UIViewController {
         print(distance < minDistance && !passedPoints.contains(index))
         print(index)
 
-        if distance < minDistance, !passedPoints.contains(index) {
+        if !isDiagonal(index1: passedPoints.last!, index2: index), distance < minDistance, !passedPoints.contains(index) {
             passedPoints.append(index)
         }
 
