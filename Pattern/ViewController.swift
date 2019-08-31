@@ -60,12 +60,46 @@ public protocol PatternContainedView: UIView {
 }
 
 public class SamplePatternView: UIView, PatternContainedView {
+
+    var insideView: UIView!
+
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    func setupView() {
+        let insideView = UIView()
+        insideView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(insideView)
+        NSLayoutConstraint.activate([
+
+            insideView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            insideView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            insideView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
+            insideView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8)
+            ])
+        self.insideView = insideView
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+
+        insideView.layer.cornerRadius = insideView.frame.height / 2
+
+    }
+
     public func update(state: PatternContainedViewState) {
         switch state {
-        case .notSelected: backgroundColor = UIColor(red: 190 / 255, green: 195 / 255, blue: 199 / 255, alpha: 1)
-        case .selected: backgroundColor = UIColor(red: 216 / 255, green: 130 / 255, blue: 59 / 255, alpha: 1)
-        case .error: backgroundColor = UIColor(red: 177 / 255, green: 67 / 255, blue: 52 / 255, alpha: 1)
-        case .success: backgroundColor = UIColor(red: 101 / 255, green: 200 / 255, blue: 122 / 255, alpha: 1)
+        case .notSelected: insideView.backgroundColor = UIColor(red: 190 / 255, green: 195 / 255, blue: 199 / 255, alpha: 1)
+        case .selected: insideView.backgroundColor = UIColor(red: 216 / 255, green: 130 / 255, blue: 59 / 255, alpha: 1)
+        case .error: insideView.backgroundColor = UIColor(red: 177 / 255, green: 67 / 255, blue: 52 / 255, alpha: 1)
+        case .success: insideView.backgroundColor = UIColor(red: 101 / 255, green: 200 / 255, blue: 122 / 255, alpha: 1)
         }
     }
 }
@@ -99,9 +133,9 @@ public class ViewController: UIViewController {
         super.viewDidLoad()
         addSubViews()
 
-        //    var functionality = PatternFunctionality.createPattern(3)
-        //    private var functionality = PatternFunctionality.checkPattern([0,3,6,7])
-        functionality = PatternFunctionality.viewPattern([0,3,6,7])
+            functionality = PatternFunctionality.createPattern(3)
+//            functionality = PatternFunctionality.checkPattern([0,3,6,7])
+//        functionality = PatternFunctionality.viewPattern([0,3,6,7])
 
     }
 
@@ -227,6 +261,7 @@ public class ViewController: UIViewController {
             if isValid {
                 delegate?.created(pattern: passedPoints)
             } else {
+                updateViews(validPattern: false)
                 delegate?.failedCreatingPattern(lenght: passedPoints.count)
             }
             print(passedPoints!)
