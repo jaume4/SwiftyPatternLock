@@ -72,12 +72,13 @@ public class SamplePatternView: UIView, PatternContainedView {
 
 public class ViewController: UIViewController {
 
-    @IBOutlet private weak var containerView: UIView!
     private weak var delegate: PatternDelegate?
 
     private var locationOfBeganTap: CGPoint!
     private var locationOfEndTap: CGPoint!
     private var recalculatedCenters = false
+    private var widthAnchor: NSLayoutConstraint!
+    private var heightAnchor: NSLayoutConstraint!
 
     private var parentStack: UIStackView!
     private var patternDotViews: [UIView & PatternContainedView]!
@@ -89,16 +90,19 @@ public class ViewController: UIViewController {
             updateViews()
         }
     }
-    private var numberOfItemsPerRow = 20
+    private var numberOfItemsPerRow = 3
     private var interpolate = false
-//    var functionality = PatternFunctionality.createPattern(3)
-//    private var functionality = PatternFunctionality.checkPattern([0,3,6,7])
-    var functionality = PatternFunctionality.viewPattern([0,3,6,7])
+    private var functionality: PatternFunctionality!
 
     override public func viewDidLoad() {
 
         super.viewDidLoad()
         addSubViews()
+
+        //    var functionality = PatternFunctionality.createPattern(3)
+        //    private var functionality = PatternFunctionality.checkPattern([0,3,6,7])
+        functionality = PatternFunctionality.viewPattern([0,3,6,7])
+
     }
 
     override public func viewDidLayoutSubviews() {
@@ -106,6 +110,9 @@ public class ViewController: UIViewController {
         super.viewDidLayoutSubviews()
         recalculatedCenters = false
         DispatchQueue.main.async {
+            let isHigh = self.view.bounds.width < self.view.bounds.height
+            self.widthAnchor.isActive = isHigh
+            self.heightAnchor.isActive = !isHigh
             self.calculatePointCentersAndUpdateSubViews()
             if let points = self.passedPoints {
                 self.drawPattern(indices: points)
@@ -114,6 +121,8 @@ public class ViewController: UIViewController {
     }
 
     func addSubViews() {
+
+        view.backgroundColor = .clear
         var stacks = [UIStackView]()
         patternDotViews = [UIView & PatternContainedView]()
 
@@ -135,11 +144,17 @@ public class ViewController: UIViewController {
         parentStack.translatesAutoresizingMaskIntoConstraints = false
         parentStack.axis = .vertical
         parentStack.distribution = .fillEqually
-        containerView.addSubview(parentStack)
-        parentStack.pinEdges(to: containerView)
+        view.addSubview(parentStack)
+        heightAnchor = parentStack.heightAnchor.constraint(equalTo: view.heightAnchor)
+        widthAnchor = parentStack.widthAnchor.constraint(equalTo: view.widthAnchor)
+        NSLayoutConstraint.activate([
+            parentStack.widthAnchor.constraint(equalTo: parentStack.heightAnchor),
+            parentStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            parentStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            ])
 
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
-        containerView.addGestureRecognizer(panGesture)
+        parentStack.addGestureRecognizer(panGesture)
     }
 
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
@@ -170,7 +185,8 @@ public class ViewController: UIViewController {
 
     @objc func didMove(gesture: UIPanGestureRecognizer) {
 
-        if case .viewPattern = functionality { return }
+        if case .viewPattern? = functionality { return }
+        guard functionality != nil else { return }
 
         switch gesture.state {
 
@@ -181,18 +197,18 @@ public class ViewController: UIViewController {
             let nearest = nearestPoint(from: locationOfBeganTap)
             passedPoints = [nearest.index]
             locationOfBeganTap = centers[nearest.index]
-            locationOfEndTap = gesture.location(in: containerView)
+            locationOfEndTap = gesture.location(in: parentStack)
             checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance)
 
         case .changed:
 
-            locationOfEndTap = gesture.location(in: containerView)
+            locationOfEndTap = gesture.location(in: parentStack)
             let nearest = nearestPoint(from: locationOfEndTap)
             checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance)
 
         case .ended:
 
-            locationOfEndTap = gesture.location(in: containerView)
+            locationOfEndTap = gesture.location(in: parentStack)
             let nearest = nearestPoint(from: locationOfEndTap)
             checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance, isEnd: true)
             endedEnteringPattern()
@@ -205,7 +221,7 @@ public class ViewController: UIViewController {
     func endedEnteringPattern() {
 
         switch functionality {
-        case .createPattern(let min):
+        case .createPattern(let min)?:
 
             let isValid = passedPoints.count >= min
             if isValid {
@@ -216,7 +232,7 @@ public class ViewController: UIViewController {
             print(passedPoints!)
             print(isValid)
 
-        case .checkPattern(let values):
+        case .checkPattern(let values)?:
 
             let isValid = passedPoints == values
             updateViews(validPattern: isValid)
@@ -280,8 +296,8 @@ public class ViewController: UIViewController {
 
         if drawingLayer == nil {
             drawingLayer = CAShapeLayer()
-            containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
-            drawingLayer.strokeColor = UIColor.red.cgColor
+            parentStack.layer.insertSublayer(drawingLayer, above: parentStack.layer)
+            drawingLayer.strokeColor = UIColor.white.cgColor
             drawingLayer.lineWidth = 5
             drawingLayer.lineCap = .round
         }
@@ -289,6 +305,14 @@ public class ViewController: UIViewController {
         guard let path = calculatePath(for: indices) else { return }
         if let endPoint = endPoint { path.addLine(to: endPoint) }
 
+//        //Animation
+//        let pathAnimation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+//        pathAnimation.fromValue = 0
+//        pathAnimation.toValue = 1
+//        pathAnimation.duration = Double(passedPoints.count) * 0.2
+//
+////        drawingLayer.path = initialPath.cgPath
+//        drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
         drawingLayer.path = path.cgPath
 
     }
@@ -387,11 +411,11 @@ extension ViewController { //Helper math funcs
             }
 
             $0.layer.cornerRadius = $0.frame.width / 2
-            return $0.convert($0.bounds, to: containerView).center
+            return $0.convert($0.bounds, to: parentStack).center
 
         }
 
-        if case .viewPattern(let pattern) = functionality {
+        if case let .viewPattern(pattern)? = functionality {
 
             let patternSet = Set(pattern)
 
@@ -407,8 +431,8 @@ extension ViewController { //Helper math funcs
                 return
 
             }
-            drawPattern(indices: pattern)
             passedPoints = pattern
+            drawPattern(indices: pattern)
         }
     }
 
