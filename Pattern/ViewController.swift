@@ -37,7 +37,7 @@ extension CGRect {
 typealias IntPoint = (x: Int, y: Int)
 
 public enum PatternFunctionality {
-    case create(Int), check([Int]), view([Int])
+    case createPattern(Int), checkPattern([Int]), viewPattern([Int])
 }
 
 class ViewController: UIViewController {
@@ -60,9 +60,9 @@ class ViewController: UIViewController {
     }
     var numberOfItemsPerRow = 3
     var interpolate = false
-    var functionality = PatternFunctionality.create(3)
-//    var functionality = PatternFunctionality.check([0,3,6,7])
-//    var functionality = PatternFunctionality.view([0,3,6,7])
+//    var functionality = PatternFunctionality.createPattern(3)
+    var functionality = PatternFunctionality.checkPattern([0,3,6,7])
+//    var functionality = PatternFunctionality.viewPattern([0,3,6,7])
 
     override func viewDidLoad() {
 
@@ -102,12 +102,8 @@ class ViewController: UIViewController {
         parentStack.pinEdges(to: containerView)
         childStacks = stacks
 
-        if case .view(let pattern) = functionality {
-            drawPattern(indices: pattern)
-        } else {
-            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
-            containerView.addGestureRecognizer(panGesture)
-        }
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
+        containerView.addGestureRecognizer(panGesture)
     }
 
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
@@ -139,6 +135,8 @@ class ViewController: UIViewController {
     }
 
     @objc func didMove(gesture: UIPanGestureRecognizer) {
+
+        if case .viewPattern = functionality { return }
 
         switch gesture.state {
 
@@ -173,11 +171,11 @@ class ViewController: UIViewController {
     func endedEnteringPattern() {
 
         switch functionality {
-        case .create(let min):
+        case .createPattern(let min):
             let isValid = passedPoints.count >= min
             print(passedPoints!)
             print(isValid)
-        case .check(let values):
+        case .checkPattern(let values):
             let isValid = passedPoints == values
             if !isValid {
                 updateViewWithError()
@@ -244,7 +242,8 @@ class ViewController: UIViewController {
             drawingLayer = CAShapeLayer()
             containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
             drawingLayer.strokeColor = UIColor.red.cgColor
-            drawingLayer.lineWidth = 2
+            drawingLayer.lineWidth = 20
+            drawingLayer.lineCap = .round
         }
 
         guard let path = calculatePath(for: indices) else { return }
@@ -350,6 +349,11 @@ extension ViewController { //Helper funcs
                 $0.layer.cornerRadius = $0.frame.width / 2
                 return $0.convert($0.bounds, to: containerView).center
             }
+        }
+
+        if case .viewPattern(let pattern) = functionality {
+            drawPattern(indices: pattern)
+            passedPoints = pattern
         }
     }
 
