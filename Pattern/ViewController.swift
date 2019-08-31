@@ -40,47 +40,78 @@ public enum PatternFunctionality {
     case createPattern(Int), checkPattern([Int]), viewPattern([Int])
 }
 
-class ViewController: UIViewController {
+public protocol PatternDelegate: class {
 
-    @IBOutlet weak var containerView: UIView!
+    func created(pattern: [Int])
+    func failedCreatingPattern(lenght: Int)
+    func introducedPattern(ok: Bool)
 
-    var locationOfBeganTap: CGPoint!
-    var locationOfEndTap: CGPoint!
-    var recalculatedCenters = false
+}
 
-    var parentStack: UIStackView!
-    var childStacks: [UIStackView]!
-    var drawingLayer: CAShapeLayer!
-    var centers: [CGPoint]!
-    var minDistance: CGFloat!
-    var passedPoints: [Int]! {
+public enum PatternContainedViewState {
+
+    case notSelected, selected, error, success
+}
+
+public protocol PatternContainedView: UIView {
+
+    func update(state: PatternContainedViewState)
+}
+
+public class SamplePatternView: UIView, PatternContainedView {
+    public func update(state: PatternContainedViewState) {
+        switch state {
+        case .notSelected: backgroundColor = UIColor(red: 190 / 255, green: 195 / 255, blue: 199 / 255, alpha: 1)
+        case .selected: backgroundColor = UIColor(red: 216 / 255, green: 130 / 255, blue: 59 / 255, alpha: 1)
+        case .error: backgroundColor = UIColor(red: 177 / 255, green: 67 / 255, blue: 52 / 255, alpha: 1)
+        case .success: backgroundColor = UIColor(red: 101 / 255, green: 200 / 255, blue: 122 / 255, alpha: 1)
+        }
+    }
+}
+
+public class ViewController: UIViewController {
+
+    @IBOutlet private weak var containerView: UIView!
+    private weak var delegate: PatternDelegate?
+
+    private var locationOfBeganTap: CGPoint!
+    private var locationOfEndTap: CGPoint!
+    private var recalculatedCenters = false
+
+    private var parentStack: UIStackView!
+    private var patternDotViews: [UIView & PatternContainedView]!
+    private var drawingLayer: CAShapeLayer!
+    private var centers: [CGPoint]!
+    private var minDistance: CGFloat!
+    private var passedPoints: [Int]! {
         didSet {
             updateViews()
         }
     }
-    var numberOfItemsPerRow = 3
-    var interpolate = false
+    private var numberOfItemsPerRow = 3
+    private var interpolate = false
 //    var functionality = PatternFunctionality.createPattern(3)
-    var functionality = PatternFunctionality.checkPattern([0,3,6,7])
+    private var functionality = PatternFunctionality.checkPattern([0,3,6,7])
 //    var functionality = PatternFunctionality.viewPattern([0,3,6,7])
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
 
         super.viewDidLoad()
         addSubViews()
     }
 
-    override func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
 
         super.viewDidLayoutSubviews()
         recalculatedCenters = false
         DispatchQueue.main.async {
-            self.calculatePointCenters()
+            self.calculatePointCentersAndUpdateSubViews()
         }
     }
 
     func addSubViews() {
         var stacks = [UIStackView]()
+        patternDotViews = [UIView & PatternContainedView]()
 
         for _ in 0..<numberOfItemsPerRow {
             let stack = UIStackView()
@@ -89,9 +120,10 @@ class ViewController: UIViewController {
             stack.distribution = .fillEqually
             stacks.append(stack)
             for _ in 0..<numberOfItemsPerRow {
-                let view = UIView()
+                let view = SamplePatternView()
                 view.translatesAutoresizingMaskIntoConstraints = false
                 stack.addArrangedSubview(view)
+                patternDotViews.append(view)
             }
         }
         parentStack = UIStackView(arrangedSubviews: stacks)
@@ -100,7 +132,6 @@ class ViewController: UIViewController {
         parentStack.distribution = .fillEqually
         containerView.addSubview(parentStack)
         parentStack.pinEdges(to: containerView)
-        childStacks = stacks
 
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
         containerView.addGestureRecognizer(panGesture)
@@ -120,17 +151,15 @@ class ViewController: UIViewController {
 
         for i in 0..<numberOfItemsPerRow * numberOfItemsPerRow {
             if !passedPointsSet.contains(i) {
-                let point = calculatePoint(from: i)
-                let childStack = childStacks[point.x]
-                childStack.arrangedSubviews[point.y].backgroundColor = .blue
+                let view = patternDotViews[i]
+                view.update(state: .notSelected)
             }
         }
 
-        passedPoints.forEach{
+        passedPoints.forEach {
 
-            let point = calculatePoint(from: $0)
-            let childStack = childStacks[point.x]
-            childStack.arrangedSubviews[point.y].backgroundColor = .orange
+            let view = patternDotViews[$0]
+            view.update(state: .selected)
         }
     }
 
@@ -142,7 +171,7 @@ class ViewController: UIViewController {
 
         case .began:
 
-            calculatePointCenters()
+            calculatePointCentersAndUpdateSubViews()
             locationOfBeganTap = gesture.location(in: parentStack)
             let nearest = nearestPoint(from: locationOfBeganTap)
             passedPoints = [nearest.index]
@@ -172,24 +201,30 @@ class ViewController: UIViewController {
 
         switch functionality {
         case .createPattern(let min):
+
             let isValid = passedPoints.count >= min
+            if isValid {
+                delegate?.created(pattern: passedPoints)
+            } else {
+                delegate?.failedCreatingPattern(lenght: passedPoints.count)
+            }
             print(passedPoints!)
             print(isValid)
+
         case .checkPattern(let values):
+
             let isValid = passedPoints == values
-            if !isValid {
-                updateViewWithError()
-            }
+            updateViews(validPattern: isValid)
+            delegate?.introducedPattern(ok: isValid)
+
         default: return
         }
     }
 
-    func updateViewWithError() {
+    func updateViews(validPattern: Bool) {
 
         passedPoints.forEach{
-            let point = calculatePoint(from: $0)
-            let childStack = childStacks[point.x]
-            childStack.arrangedSubviews[point.y].backgroundColor = .red
+            patternDotViews[$0].update(state: validPattern ? .success : .error)
         }
 
     }
@@ -254,7 +289,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController { //Helper funcs
+extension ViewController { //Helper math funcs
 
     func isDiagonal(point1: IntPoint, point2: IntPoint) -> Bool {
 
@@ -294,6 +329,7 @@ extension ViewController { //Helper funcs
         let avI = av - dx
 
         var points = [IntPoint]()
+
         while x != endPoint.x || y != endPoint.y {
             if av >= 0 {
                 x = x + incXi
@@ -332,7 +368,7 @@ extension ViewController { //Helper funcs
         return point.x * numberOfItemsPerRow + point.y
     }
 
-    func calculatePointCenters() {
+    func calculatePointCentersAndUpdateSubViews() {
 
         guard !recalculatedCenters else { return }
         recalculatedCenters = true
