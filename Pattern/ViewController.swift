@@ -158,6 +158,42 @@ class ViewController: UIViewController {
 
     }
 
+    func draw(index: Int, distance: CGFloat, ending: Bool = false) {
+
+        if drawingLayer == nil {
+            drawingLayer = CAShapeLayer()
+            containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
+        }
+
+        let point1 = calculatePoint(from: passedPoints.last!)
+        let point2 = calculatePoint(from: index)
+
+        let points = calculateLine(startPoint: point1, endPoint: point2)
+        let indices = points.map { calculateIndex(for: $0) }
+
+        if distance < minDistance, !passedPoints.contains(index) {
+            passedPoints.append(contentsOf: indices.filter{ !passedPoints.contains($0) })
+            passedPoints.append(index)
+        }
+
+        let path = UIBezierPath()
+        path.move(to: locationOfBeganTap)
+        passedPoints.forEach {
+            path.addLine(to: centers[$0])
+            path.move(to: centers[$0])
+        }
+
+        if !ending {path.addLine(to: locationOfEndTap)}
+
+        drawingLayer.path = path.cgPath
+        drawingLayer.strokeColor = UIColor.red.cgColor
+        drawingLayer.lineWidth = 2
+
+    }
+}
+
+extension ViewController { //Helper funcs
+
     func isDiagonal(point1: IntPoint, point2: IntPoint) -> Bool {
 
         return abs(point1.x - point2.x) == abs(point1.y - point2.y)
@@ -231,12 +267,12 @@ class ViewController: UIViewController {
 
     func calculateIndex(for point: IntPoint) -> Int {
 
-         return point.x * numberOfItemsPerRow + point.y
+        return point.x * numberOfItemsPerRow + point.y
     }
 
     func calculatePointCenters() {
 
-        if recalculatedCenters { return }
+        guard !recalculatedCenters else { return }
         recalculatedCenters = true
         var calculatedMinDistance = false
 
@@ -254,37 +290,4 @@ class ViewController: UIViewController {
         }
     }
 
-    func draw(index: Int, distance: CGFloat, ending: Bool = false) {
-
-        if drawingLayer == nil {
-            drawingLayer = CAShapeLayer()
-            containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
-        }
-
-        let point1 = calculatePoint(from: passedPoints.last!)
-        let point2 = calculatePoint(from: index)
-
-        let points = calculateLine(startPoint: point1, endPoint: point2)
-        let indices = points.map { calculateIndex(for: $0) }
-
-        if distance < minDistance, !passedPoints.contains(index) {
-            passedPoints.append(contentsOf: indices.filter{ !passedPoints.contains($0) })
-            passedPoints.append(index)
-        }
-
-        let path = UIBezierPath()
-        path.move(to: locationOfBeganTap)
-        passedPoints.forEach {
-            path.addLine(to: centers[$0])
-            path.move(to: centers[$0])
-        }
-
-        if !ending {path.addLine(to: locationOfEndTap)}
-
-        drawingLayer.path = path.cgPath
-        drawingLayer.strokeColor = UIColor.red.cgColor
-        drawingLayer.lineWidth = 2
-
-    }
 }
-
