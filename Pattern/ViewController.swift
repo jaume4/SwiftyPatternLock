@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 extension UIView {
     func pinEdges(to other: UIView) {
@@ -88,11 +89,11 @@ public class ViewController: UIViewController {
             updateViews()
         }
     }
-    private var numberOfItemsPerRow = 3
+    private var numberOfItemsPerRow = 20
     private var interpolate = false
 //    var functionality = PatternFunctionality.createPattern(3)
-    private var functionality = PatternFunctionality.checkPattern([0,3,6,7])
-//    var functionality = PatternFunctionality.viewPattern([0,3,6,7])
+//    private var functionality = PatternFunctionality.checkPattern([0,3,6,7])
+    var functionality = PatternFunctionality.viewPattern([0,3,6,7])
 
     override public func viewDidLoad() {
 
@@ -106,6 +107,9 @@ public class ViewController: UIViewController {
         recalculatedCenters = false
         DispatchQueue.main.async {
             self.calculatePointCentersAndUpdateSubViews()
+            if let points = self.passedPoints {
+                self.drawPattern(indices: points)
+            }
         }
     }
 
@@ -121,6 +125,7 @@ public class ViewController: UIViewController {
             stacks.append(stack)
             for _ in 0..<numberOfItemsPerRow {
                 let view = SamplePatternView()
+                view.update(state: .notSelected)
                 view.translatesAutoresizingMaskIntoConstraints = false
                 stack.addArrangedSubview(view)
                 patternDotViews.append(view)
@@ -277,7 +282,7 @@ public class ViewController: UIViewController {
             drawingLayer = CAShapeLayer()
             containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
             drawingLayer.strokeColor = UIColor.red.cgColor
-            drawingLayer.lineWidth = 20
+            drawingLayer.lineWidth = 5
             drawingLayer.lineCap = .round
         }
 
@@ -374,20 +379,34 @@ extension ViewController { //Helper math funcs
         recalculatedCenters = true
         var calculatedMinDistance = false
 
-        centers = parentStack.arrangedSubviews.flatMap { stack in
-            (stack as! UIStackView).arrangedSubviews.compactMap{
+        centers = patternDotViews.compactMap {
 
-                if !calculatedMinDistance {
-                    minDistance = $0.frame.width / 3
-                    calculatedMinDistance = true
-                }
-                $0.backgroundColor = .blue
-                $0.layer.cornerRadius = $0.frame.width / 2
-                return $0.convert($0.bounds, to: containerView).center
+            if !calculatedMinDistance {
+                minDistance = $0.frame.width / 3
+                calculatedMinDistance = true
             }
+
+            $0.layer.cornerRadius = $0.frame.width / 2
+            return $0.convert($0.bounds, to: containerView).center
+
         }
 
         if case .viewPattern(let pattern) = functionality {
+
+            let patternSet = Set(pattern)
+
+            guard patternSet.count == pattern.count,
+                let max = pattern.max(), max < numberOfItemsPerRow * numberOfItemsPerRow,
+                let min = pattern.min(), min >= 0 else { //Invalid pattern
+
+                if #available(iOS 12.0, *) {
+                    os_log(.error, "Invalid pattern received")
+                } else {
+                   NSLog("Invalid pattern received")
+                }
+                return
+
+            }
             drawPattern(indices: pattern)
             passedPoints = pattern
         }
