@@ -8,22 +8,15 @@
 
 import UIKit
 
-extension UIColor {
-
-    static func random(hue: CGFloat = CGFloat.random(in: 0...1),
-                       saturation: CGFloat = CGFloat.random(in: 0.5...1), // from 0.5 to 1.0 to stay away from white
-        brightness: CGFloat = CGFloat.random(in: 0.5...1), // from 0.5 to 1.0 to stay away from black
-        alpha: CGFloat = 1) -> UIColor {
-        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
-    }
-}
-
 extension UIView {
     func pinEdges(to other: UIView) {
-        leadingAnchor.constraint(equalTo: other.leadingAnchor).isActive = true
-        trailingAnchor.constraint(equalTo: other.trailingAnchor).isActive = true
-        topAnchor.constraint(equalTo: other.topAnchor).isActive = true
-        bottomAnchor.constraint(equalTo: other.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            leadingAnchor.constraint(equalTo: other.leadingAnchor),
+            trailingAnchor.constraint(equalTo: other.trailingAnchor),
+            topAnchor.constraint(equalTo: other.topAnchor),
+            bottomAnchor.constraint(equalTo: other.bottomAnchor)
+            ])
+
     }
 }
 
@@ -40,6 +33,8 @@ extension CGRect {
         return CGPoint(x: midX, y: midY)
     }
 }
+
+typealias IntPoint = (x: Int, y: Int)
 
 class ViewController: UIViewController {
 
@@ -58,14 +53,12 @@ class ViewController: UIViewController {
             updateViews()
         }
     }
-    var numberOfItemsPerRow = 4
+    var numberOfItemsPerRow = 3
+    var interpolate = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
 
-
-        var index = 0
         var stacks = [UIStackView]()
 
         for _ in 0..<numberOfItemsPerRow {
@@ -76,10 +69,7 @@ class ViewController: UIViewController {
             stacks.append(stack)
             for _ in 0..<numberOfItemsPerRow {
                 let view = UIView()
-                view.accessibilityIdentifier = "\(index)"
-                index += 1
                 view.translatesAutoresizingMaskIntoConstraints = false
-                view.backgroundColor = UIColor.random()
                 stack.addArrangedSubview(view)
             }
         }
@@ -95,6 +85,13 @@ class ViewController: UIViewController {
 
     }
 
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        DispatchQueue.main.async {
+            self.calculatePointCenters()
+        }
+    }
+
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
 
         let distances = centers.map{ $0.distance(from: point) }
@@ -104,7 +101,19 @@ class ViewController: UIViewController {
     }
 
     func updateViews() {
+
+        let passedPointsSet = Set(passedPoints)
+
+        for i in 0..<numberOfItemsPerRow * numberOfItemsPerRow {
+            if !passedPointsSet.contains(i) {
+                let point = calculatePoint(from: i)
+                let childStack = parentStack.arrangedSubviews[point.x] as! UIStackView
+                childStack.arrangedSubviews[point.y].backgroundColor = .blue
+            }
+        }
+
         passedPoints.forEach{
+
             let stack = $0 / numberOfItemsPerRow
             let index = $0 % numberOfItemsPerRow
             let childStack = parentStack.arrangedSubviews[stack] as! UIStackView
@@ -115,6 +124,7 @@ class ViewController: UIViewController {
     @objc func didMove(gesture: UIPanGestureRecognizer) {
 
         switch gesture.state {
+
         case .began:
 
             calculatePointCenters()
@@ -124,47 +134,124 @@ class ViewController: UIViewController {
             locationOfBeganTap = centers[nearest.index]
             locationOfEndTap = gesture.location(in: containerView)
             draw(index: nearest.index, distance: nearest.distance)
+
         case .changed:
+
             locationOfEndTap = gesture.location(in: containerView)
             let nearest = nearestPoint(from: locationOfEndTap)
             draw(index: nearest.index, distance: nearest.distance)
+
         case .ended:
+
             locationOfEndTap = gesture.location(in: containerView)
             let nearest = nearestPoint(from: locationOfEndTap)
             draw(index: nearest.index, distance: nearest.distance, ending: true)
+
         default: return
         }
 
     }
 
     override func viewDidLayoutSubviews() {
+
         super.viewDidLayoutSubviews()
         recalculatedCenters = false
     }
 
-    func isDiagonal(index1: Int, index2: Int) -> Bool {
-        let index1x = index1 / numberOfItemsPerRow
-        let index1y = index1 % numberOfItemsPerRow
-        let index2x = index2 / numberOfItemsPerRow
-        let index2y = index2 % numberOfItemsPerRow
-        return abs(index1x-index2x) == abs(index1y - index2y)
+    func isDiagonal(point1: IntPoint, point2: IntPoint) -> Bool {
+
+        return abs(point1.x - point2.x) == abs(point1.y - point2.y)
+    }
+
+    func isOnSameLine(point1: IntPoint, point2: IntPoint) -> Bool {
+
+        return point1.x == point2.x || point1.y == point2.y
+    }
+
+    func calculateLine(startPoint: IntPoint, endPoint: IntPoint) -> [IntPoint] {
+
+        var dy = (endPoint.y - startPoint.y)
+        var dx = (endPoint.x - startPoint.x)
+
+        let incYi: Int
+        if dy >= 0 { incYi = 1 } else { dy = -dy ; incYi = -1 }
+
+        let incXi: Int
+        if dx >= 0 { incXi = 1 } else { dx = -dx ; incXi = -1 }
+
+        let incYr, incXr: Int
+        if dx >= dy {
+            incYr = 0
+            incXr = incXi
+        } else {
+            incXr = 0
+            incYr = incYi
+            (dx, dy) = (dy, dx)
+        }
+
+        var x = startPoint.x
+        var y = startPoint.y
+        let avR = 2 * dy
+        var av = avR - dx
+        let avI = av - dx
+
+        var points = [IntPoint]()
+        while x != endPoint.x || y != endPoint.y {
+            if av >= 0 {
+                x = x + incXi
+                y = y + incYi
+                av = av + avI
+            } else {
+                x = x + incXr
+                y = y + incYr
+                av = av + avR
+            }
+
+            let point = (x, y)
+            if interpolate {
+                points.append(point)
+            } else {
+                let onSameLine = isOnSameLine(point1: startPoint, point2: point) && isOnSameLine(point1: endPoint, point2: point)
+                let onDiagonal = isDiagonal(point1: startPoint, point2: point) && isDiagonal(point1: endPoint, point2: point)
+                if onSameLine || onDiagonal {
+                    points.append(point)
+                }
+            }
+        }
+
+        return points
+    }
+
+    func calculatePoint(from index: Int) -> IntPoint {
+
+        let indexX = index / numberOfItemsPerRow
+        let indexY = index % numberOfItemsPerRow
+        return (indexX, indexY)
+    }
+
+    func calculateIndex(for point: IntPoint) -> Int {
+
+         return point.x * numberOfItemsPerRow + point.y
     }
 
     func calculatePointCenters() {
 
         if recalculatedCenters { return }
         recalculatedCenters = true
+        var calculatedMinDistance = false
 
         centers = parentStack.arrangedSubviews.flatMap { stack in
             (stack as! UIStackView).arrangedSubviews.compactMap{
 
-                if $0.accessibilityIdentifier == "0" { minDistance = $0.frame.width / 3 }
+                if !calculatedMinDistance {
+                    minDistance = $0.frame.width / 3
+                    calculatedMinDistance = true
+                }
                 $0.backgroundColor = .blue
                 $0.layer.cornerRadius = $0.frame.width / 2
                 return $0.convert($0.bounds, to: containerView).center
             }
         }
-
     }
 
     func draw(index: Int, distance: CGFloat, ending: Bool = false) {
@@ -174,10 +261,14 @@ class ViewController: UIViewController {
             containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
         }
 
-        print(distance < minDistance && !passedPoints.contains(index))
-        print(index)
+        let point1 = calculatePoint(from: passedPoints.last!)
+        let point2 = calculatePoint(from: index)
 
-        if !isDiagonal(index1: passedPoints.last!, index2: index), distance < minDistance, !passedPoints.contains(index) {
+        let points = calculateLine(startPoint: point1, endPoint: point2)
+        let indices = points.map { calculateIndex(for: $0) }
+
+        if distance < minDistance, !passedPoints.contains(index) {
+            passedPoints.append(contentsOf: indices.filter{ !passedPoints.contains($0) })
             passedPoints.append(index)
         }
 
@@ -187,15 +278,13 @@ class ViewController: UIViewController {
             path.addLine(to: centers[$0])
             path.move(to: centers[$0])
         }
-        if !ending {path.addLine(to: locationOfEndTap)}
 
+        if !ending {path.addLine(to: locationOfEndTap)}
 
         drawingLayer.path = path.cgPath
         drawingLayer.strokeColor = UIColor.red.cgColor
         drawingLayer.lineWidth = 2
 
     }
-
-
 }
 
