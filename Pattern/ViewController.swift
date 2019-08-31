@@ -124,9 +124,10 @@ public class ViewController: UIViewController {
             updateViews()
         }
     }
-    private var numberOfItemsPerRow = 3
+    private var numberOfItemsPerRow = 10
     private var interpolate = false
     private var functionality: PatternFunctionality!
+    private let animationBaseDuration = 0.3
 
     override public func viewDidLoad() {
 
@@ -135,7 +136,10 @@ public class ViewController: UIViewController {
 
             functionality = PatternFunctionality.createPattern(3)
 //            functionality = PatternFunctionality.checkPattern([0,3,6,7])
-//        functionality = PatternFunctionality.viewPattern([0,3,6,7])
+//        functionality = PatternFunctionality.viewPattern([2, 1, 4, 3, 0, 7, 6, 5, 8])
+//        functionality = .viewPattern([0, 7, 2, 3, 8, 1, 6, 5, 4])
+//        functionality = .viewPattern([0, 5, 16, 21, 22, 13, 8, 3, 2, 6, 12, 18, 24, 19, 14, 9, 4, 17, 10, 11, 7, 1, 15])
+        functionality = .viewPattern([0, 10, 20, 30, 40, 50, 60, 70, 71, 72, 73, 74, 75, 66, 57, 47, 37, 26, 25, 24, 23, 33, 54, 85, 96, 95, 94, 84, 64, 55, 27, 3, 13, 34, 44, 53, 62, 51, 41, 31, 5, 6, 7, 8, 18, 28, 38, 48, 58, 68, 78, 87, 86, 63, 43, 19, 29, 39, 49, 59, 69, 79, 89, 98, 97, 93, 92, 91, 80, 61, 22, 12, 1, 11, 21, 42, 76, 77, 88, 99])
 
     }
 
@@ -191,14 +195,6 @@ public class ViewController: UIViewController {
         parentStack.addGestureRecognizer(panGesture)
     }
 
-    func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
-
-        let distances = centers.map{ $0.distance(from: point) }
-        let min = distances.min()!
-        return (distances.firstIndex(where: {$0 == min})!, min)
-
-    }
-
     func updateViews() {
 
         let passedPointsSet = Set(passedPoints)
@@ -210,10 +206,29 @@ public class ViewController: UIViewController {
             }
         }
 
-        passedPoints.forEach {
+        let animate: Bool
+        if case .viewPattern? = functionality { animate = true } else { animate = false }
 
-            let view = patternDotViews[$0]
-            view.update(state: .selected)
+        let points = passedPoints.map { calculatePoint(from: $0) }
+        let distances: [Double] = points.enumerated().map{
+            if $0.offset == 0 { return 0 }
+            return distance(from: $0.element, to: points[$0.offset - 1])
+        }
+        let sum = distances.reduce(0, {$0 + $1})
+        var totalSum = 0.0
+        let delays: [Double] = distances.map {
+
+            totalSum += $0
+            return (totalSum / sum) * Double(passedPoints.count) * animationBaseDuration
+
+        }
+
+        passedPoints.enumerated().forEach {
+
+            let view = patternDotViews[$0.element]
+            UIView.animate(withDuration: 0.5, delay: animate ? (delays[$0.offset] - 0.1) : 0, options: .beginFromCurrentState, animations: {
+                view.update(state: .selected)
+            }, completion: nil)
         }
     }
 
@@ -333,27 +348,57 @@ public class ViewController: UIViewController {
             drawingLayer = CAShapeLayer()
             parentStack.layer.insertSublayer(drawingLayer, above: parentStack.layer)
             drawingLayer.strokeColor = UIColor.white.cgColor
-            drawingLayer.lineWidth = 5
+            drawingLayer.lineWidth = 3
             drawingLayer.lineCap = .round
+            drawingLayer.lineJoin = .round
         }
 
         guard let path = calculatePath(for: indices) else { return }
         if let endPoint = endPoint { path.addLine(to: endPoint) }
 
-//        //Animation
-//        let pathAnimation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
-//        pathAnimation.fromValue = 0
-//        pathAnimation.toValue = 1
-//        pathAnimation.duration = Double(passedPoints.count) * 0.2
-//
-////        drawingLayer.path = initialPath.cgPath
-//        drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
+        //Animation
+        if case .viewPattern? = functionality {
+            let pathAnimation = CAKeyframeAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+            let points = passedPoints.map { calculatePoint(from: $0) }
+            let distances: [Double] = points.enumerated().map{
+                if $0.offset == 0 { return 0 }
+                return distance(from: $0.element, to: points[$0.offset - 1])
+            }
+            let sum = distances.reduce(0, {$0 + $1})
+            var totalSum = 0.0
+            let values: [NSNumber] = distances.map {
+
+                totalSum += $0
+                return NSNumber(value: totalSum / sum)
+
+            }
+
+            pathAnimation.keyTimes = values
+            pathAnimation.values = values
+            pathAnimation.duration = Double(passedPoints.count) * animationBaseDuration
+            drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
+        }
+
         drawingLayer.path = path.cgPath
 
     }
 }
 
 extension ViewController { //Helper math funcs
+
+    func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
+
+        let distances = centers.map{ $0.distance(from: point) }
+        let min = distances.min()!
+        return (distances.firstIndex(where: {$0 == min})!, min)
+
+    }
+
+    func distance(from: IntPoint, to: IntPoint) -> Double {
+        let x = (from.x - to.x)
+        let y = (from.y - to.y)
+        return sqrt(Double(x * x + y * y))
+    }
 
     func isDiagonal(point1: IntPoint, point2: IntPoint) -> Bool {
 
