@@ -36,6 +36,10 @@ extension CGRect {
 
 typealias IntPoint = (x: Int, y: Int)
 
+public enum PatternFunctionality {
+    case create(Int), check([Int]), view([Int])
+}
+
 class ViewController: UIViewController {
 
     @IBOutlet weak var containerView: UIView!
@@ -56,6 +60,9 @@ class ViewController: UIViewController {
     }
     var numberOfItemsPerRow = 3
     var interpolate = false
+    var functionality = PatternFunctionality.create(3)
+//    var functionality = PatternFunctionality.check([0,3,6,7])
+//    var functionality = PatternFunctionality.view([0,3,6,7])
 
     override func viewDidLoad() {
 
@@ -95,8 +102,12 @@ class ViewController: UIViewController {
         parentStack.pinEdges(to: containerView)
         childStacks = stacks
 
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
-        containerView.addGestureRecognizer(panGesture)
+        if case .view(let pattern) = functionality {
+            drawPattern(indices: pattern)
+        } else {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
+            containerView.addGestureRecognizer(panGesture)
+        }
     }
 
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
@@ -139,31 +150,61 @@ class ViewController: UIViewController {
             passedPoints = [nearest.index]
             locationOfBeganTap = centers[nearest.index]
             locationOfEndTap = gesture.location(in: containerView)
-            draw(index: nearest.index, distance: nearest.distance)
+            checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance)
 
         case .changed:
 
             locationOfEndTap = gesture.location(in: containerView)
             let nearest = nearestPoint(from: locationOfEndTap)
-            draw(index: nearest.index, distance: nearest.distance)
+            checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance)
 
         case .ended:
 
             locationOfEndTap = gesture.location(in: containerView)
             let nearest = nearestPoint(from: locationOfEndTap)
-            draw(index: nearest.index, distance: nearest.distance, ending: true)
+            checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance, isEnd: true)
+            endedEnteringPattern()
 
         default: return
         }
 
     }
 
-    func draw(index: Int, distance: CGFloat, ending: Bool = false) {
+    func endedEnteringPattern() {
 
-        if drawingLayer == nil {
-            drawingLayer = CAShapeLayer()
-            containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
+        switch functionality {
+        case .create(let min):
+            let isValid = passedPoints.count >= min
+            print(passedPoints!)
+            print(isValid)
+        case .check(let values):
+            let isValid = passedPoints == values
+            if !isValid {
+                updateViewWithError()
+            }
+        default: return
         }
+    }
+
+    func updateViewWithError() {
+
+        passedPoints.forEach{
+            let point = calculatePoint(from: $0)
+            let childStack = childStacks[point.x]
+            childStack.arrangedSubviews[point.y].backgroundColor = .red
+        }
+
+    }
+
+    func drawPattern(indices: [Int]) {
+        draw(indices: indices, endPoint: nil)
+    }
+
+    func checkIfIsPassingPoint(index: Int, distance: CGFloat, isEnd: Bool = false) {
+
+        defer { draw(indices: passedPoints, endPoint: isEnd ? nil : locationOfEndTap) }
+
+        guard distance < minDistance else { return }
 
         let point1 = calculatePoint(from: passedPoints.last!)
         let point2 = calculatePoint(from: index)
@@ -171,23 +212,45 @@ class ViewController: UIViewController {
         let points = calculateLine(startPoint: point1, endPoint: point2)
         let indices = points.map { calculateIndex(for: $0) }
 
-        if distance < minDistance, !passedPoints.contains(index) {
-            passedPoints.append(contentsOf: indices.filter{ !passedPoints.contains($0) })
-            passedPoints.append(index)
+        if !passedPoints.contains(index) {
+            if !points.isEmpty {
+                passedPoints.append(contentsOf: indices.filter{ !passedPoints.contains($0) })
+            } else {
+                passedPoints.append(index)
+            }
         }
+
+    }
+
+    func calculatePath(for points: [Int]) -> UIBezierPath? {
+
+        guard let first = points.first else { return nil }
 
         let path = UIBezierPath()
-        path.move(to: locationOfBeganTap)
-        passedPoints.forEach {
-            path.addLine(to: centers[$0])
-            path.move(to: centers[$0])
+        path.move(to: centers[first])
+        for i in 1..<points.count {
+            let point = points[i]
+            path.addLine(to: centers[point])
+            path.move(to: centers[point])
         }
 
-        if !ending {path.addLine(to: locationOfEndTap)}
+        return path
+
+    }
+
+    func draw(indices: [Int], endPoint: CGPoint?) {
+
+        if drawingLayer == nil {
+            drawingLayer = CAShapeLayer()
+            containerView.layer.insertSublayer(drawingLayer, above: containerView.layer)
+            drawingLayer.strokeColor = UIColor.red.cgColor
+            drawingLayer.lineWidth = 2
+        }
+
+        guard let path = calculatePath(for: indices) else { return }
+        if let endPoint = endPoint { path.addLine(to: endPoint) }
 
         drawingLayer.path = path.cgPath
-        drawingLayer.strokeColor = UIColor.red.cgColor
-        drawingLayer.lineWidth = 2
 
     }
 }
