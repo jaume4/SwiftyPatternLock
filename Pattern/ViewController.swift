@@ -45,6 +45,7 @@ class ViewController: UIViewController {
     var recalculatedCenters = false
 
     var parentStack: UIStackView!
+    var childStacks: [UIStackView]!
     var drawingLayer: CAShapeLayer!
     var centers: [CGPoint]!
     var minDistance: CGFloat!
@@ -57,8 +58,21 @@ class ViewController: UIViewController {
     var interpolate = false
 
     override func viewDidLoad() {
-        super.viewDidLoad()
 
+        super.viewDidLoad()
+        addSubViews()
+    }
+
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+        recalculatedCenters = false
+        DispatchQueue.main.async {
+            self.calculatePointCenters()
+        }
+    }
+
+    func addSubViews() {
         var stacks = [UIStackView]()
 
         for _ in 0..<numberOfItemsPerRow {
@@ -79,17 +93,10 @@ class ViewController: UIViewController {
         parentStack.distribution = .fillEqually
         containerView.addSubview(parentStack)
         parentStack.pinEdges(to: containerView)
+        childStacks = stacks
 
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
         containerView.addGestureRecognizer(panGesture)
-
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        DispatchQueue.main.async {
-            self.calculatePointCenters()
-        }
     }
 
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
@@ -107,17 +114,16 @@ class ViewController: UIViewController {
         for i in 0..<numberOfItemsPerRow * numberOfItemsPerRow {
             if !passedPointsSet.contains(i) {
                 let point = calculatePoint(from: i)
-                let childStack = parentStack.arrangedSubviews[point.x] as! UIStackView
+                let childStack = childStacks[point.x]
                 childStack.arrangedSubviews[point.y].backgroundColor = .blue
             }
         }
 
         passedPoints.forEach{
 
-            let stack = $0 / numberOfItemsPerRow
-            let index = $0 % numberOfItemsPerRow
-            let childStack = parentStack.arrangedSubviews[stack] as! UIStackView
-            childStack.arrangedSubviews[index].backgroundColor = .orange
+            let point = calculatePoint(from: $0)
+            let childStack = childStacks[point.x]
+            childStack.arrangedSubviews[point.y].backgroundColor = .orange
         }
     }
 
@@ -150,12 +156,6 @@ class ViewController: UIViewController {
         default: return
         }
 
-    }
-
-    override func viewDidLayoutSubviews() {
-
-        super.viewDidLayoutSubviews()
-        recalculatedCenters = false
     }
 
     func isDiagonal(point1: IntPoint, point2: IntPoint) -> Bool {
