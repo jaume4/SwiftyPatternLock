@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Pattern
 //
-//  Created by jaume on 28/08/2019.
+//  Created by jaume on 31/08/2019.
 //  Copyright © 2019 Jaume. All rights reserved.
 //
 
@@ -12,6 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
