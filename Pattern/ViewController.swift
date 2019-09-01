@@ -278,9 +278,11 @@ public class ViewController: UIViewController {
 
     func updateViews(validPattern: Bool) {
 
+        CATransaction.begin()
         passedPoints.forEach{
             patternDotViews[$0].update(state: validPattern ? .success : .error)
         }
+        CATransaction.commit()
 
     }
 

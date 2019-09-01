@@ -54,8 +54,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: PatternDelegate {
     func created(pattern: [Int]) {
-        vc.functionality = .viewPattern(pattern)
-//        vc.functionality = .checkPattern(pattern)
+//              vc.functionality = .viewPattern(pattern)
+
+        vc.functionality = .checkPattern(pattern)
     }
 
     func failedCreatingPattern(lenght: Int) {
@@ -63,9 +64,9 @@ extension AppDelegate: PatternDelegate {
 
     func introducedPattern(ok: Bool) {
         if ok {
-//            vc.functionality = .viewPattern([0,1,2,3,4,5,6,7,8])
+            vc.functionality = .viewPattern([0,1,2,3,4,5,6,7,8])
         } else {
-//            vc.functionality = .createPattern(3)
+            vc.functionality = .createPattern(3)
         }
 
     }
