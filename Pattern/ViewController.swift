@@ -119,14 +119,12 @@ public class ViewController: UIViewController {
     private var drawingLayer: CAShapeLayer!
     private var centers: [CGPoint]!
     private var minDistance: CGFloat!
-    private var passedPoints: [Int]! {
-        didSet {
-            updateViews()
-        }
-    }
+    private var passedPoints: [Int]!
     private var numberOfItemsPerRow = 3
     private var interpolate = false
-    public var functionality: PatternFunctionality!
+    public var functionality: PatternFunctionality! {
+        didSet { updateViews() }
+    }
     private let animationBaseDuration = 0.3
 
     override public func viewDidLoad() {
@@ -152,7 +150,7 @@ public class ViewController: UIViewController {
             let isHigh = self.view.bounds.width < self.view.bounds.height
             self.widthAnchor.isActive = isHigh
             self.heightAnchor.isActive = !isHigh
-            self.calculatePointCentersAndUpdateSubViews()
+            self.calculatePointCenters()
             if let points = self.passedPoints {
                 self.drawPattern(indices: points)
             }
@@ -198,38 +196,12 @@ public class ViewController: UIViewController {
 
     func updateViews() {
 
-        let passedPointsSet = Set(passedPoints)
-
-        for i in 0..<numberOfItemsPerRow * numberOfItemsPerRow {
-            if !passedPointsSet.contains(i) {
-                let view = patternDotViews[i]
-                view.update(state: .notSelected)
-            }
-        }
-
-        let animate: Bool
-        if case .viewPattern? = functionality { animate = true } else { animate = false }
-
-        let points = passedPoints.map { calculatePoint(from: $0) }
-        let distances: [Double] = points.enumerated().map{
-            if $0.offset == 0 { return 0 }
-            return distance(from: $0.element, to: points[$0.offset - 1])
-        }
-        let sum = distances.reduce(0, {$0 + $1})
-        var totalSum = 0.0
-        let delays: [Double] = distances.map {
-
-            totalSum += $0
-            return (totalSum / sum) * Double(passedPoints.count) * animationBaseDuration
-
-        }
-
-        passedPoints.enumerated().forEach {
-
-            let view = patternDotViews[$0.element]
-            UIView.animate(withDuration: 0.5, delay: animate ? (delays[$0.offset] - 0.1) : 0, options: .beginFromCurrentState, animations: {
-                view.update(state: .selected)
-            }, completion: nil)
+        if case .viewPattern(let pattern)? = functionality {
+            resetViews()
+            passedPoints = pattern
+            drawPattern(indices: passedPoints)
+        } else {
+            resetViews()
         }
     }
 
@@ -242,7 +214,8 @@ public class ViewController: UIViewController {
 
         case .began:
 
-            calculatePointCentersAndUpdateSubViews()
+            resetViews()
+            calculatePointCenters()
             locationOfBeganTap = gesture.location(in: parentStack)
             let nearest = nearestPoint(from: locationOfBeganTap)
             passedPoints = [nearest.index]
@@ -280,8 +253,6 @@ public class ViewController: UIViewController {
                 updateViews(validPattern: false)
                 delegate?.failedCreatingPattern(lenght: passedPoints.count)
             }
-            print(passedPoints!)
-            print(isValid)
 
         case .checkPattern(let values)?:
 
@@ -291,6 +262,18 @@ public class ViewController: UIViewController {
 
         default: return
         }
+    }
+
+    func resetViews() {
+
+        guard recalculatedCenters else { return }
+
+        CATransaction.begin()
+        patternDotViews.forEach{ $0.update(state: .notSelected) }
+        drawingLayer?.path = nil
+        CATransaction.commit()
+
+
     }
 
     func updateViews(validPattern: Bool) {
@@ -357,16 +340,38 @@ public class ViewController: UIViewController {
         guard let path = calculatePath(for: indices) else { return }
         if let endPoint = endPoint { path.addLine(to: endPoint) }
 
+        let points = passedPoints.map { calculatePoint(from: $0) }
+        let distances: [Double] = points.enumerated().map{
+            if $0.offset == 0 { return 0 }
+            return distance(from: $0.element, to: points[$0.offset - 1])
+        }
+        let sum = distances.reduce(0, {$0 + $1})
+        var totalSum = 0.0
+
+        let animate: Bool
+
         //Animation
-        if case .viewPattern? = functionality {
-            let pathAnimation = CAKeyframeAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
-            let points = passedPoints.map { calculatePoint(from: $0) }
-            let distances: [Double] = points.enumerated().map{
-                if $0.offset == 0 { return 0 }
-                return distance(from: $0.element, to: points[$0.offset - 1])
+        if case .viewPattern(let pattern)? = functionality {
+
+            animate = true
+            let patternSet = Set(pattern)
+
+            guard patternSet.count == pattern.count,
+                let max = pattern.max(), max < numberOfItemsPerRow * numberOfItemsPerRow,
+                let min = pattern.min(), min >= 0 else { //Invalid pattern
+
+                    if #available(iOS 12.0, *) {
+                        os_log(.error, "Invalid pattern received")
+                    } else {
+                        NSLog("Invalid pattern received")
+                    }
+                    return
+
             }
-            let sum = distances.reduce(0, {$0 + $1})
-            var totalSum = 0.0
+
+            passedPoints = pattern
+
+            let pathAnimation = CAKeyframeAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
             let values: [NSNumber] = distances.map {
 
                 totalSum += $0
@@ -378,10 +383,29 @@ public class ViewController: UIViewController {
             pathAnimation.values = values
             pathAnimation.duration = Double(passedPoints.count) * animationBaseDuration
             drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
+        } else {
+            animate = false
         }
 
+        CATransaction.begin()
         drawingLayer.path = path.cgPath
 
+        totalSum = 0
+        let delays: [Double] = distances.map {
+
+            totalSum += $0
+            return (totalSum / sum) * Double(passedPoints.count) * animationBaseDuration
+
+        }
+        passedPoints.enumerated().forEach {
+
+            let view = patternDotViews[$0.element]
+            UIView.animate(withDuration: 0.5, delay: animate ? (delays[$0.offset] - 0.1) : 0, options: .beginFromCurrentState, animations: {
+                view.update(state: .selected)
+            }, completion: nil)
+        }
+
+        CATransaction.commit()
     }
 }
 
@@ -478,7 +502,7 @@ extension ViewController { //Helper math funcs
         return point.x * numberOfItemsPerRow + point.y
     }
 
-    func calculatePointCentersAndUpdateSubViews() {
+    func calculatePointCenters() {
 
         guard !recalculatedCenters else { return }
         recalculatedCenters = true
@@ -499,24 +523,5 @@ extension ViewController { //Helper math funcs
         guard newCenters != centers else { return }
         centers = newCenters
 
-        if case let .viewPattern(pattern)? = functionality {
-
-            let patternSet = Set(pattern)
-
-            guard patternSet.count == pattern.count,
-                let max = pattern.max(), max < numberOfItemsPerRow * numberOfItemsPerRow,
-                let min = pattern.min(), min >= 0 else { //Invalid pattern
-
-                if #available(iOS 12.0, *) {
-                    os_log(.error, "Invalid pattern received")
-                } else {
-                   NSLog("Invalid pattern received")
-                }
-                return
-
-            }
-
-            passedPoints = pattern
-        }
     }
 }

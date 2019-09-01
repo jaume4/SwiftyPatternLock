@@ -13,17 +13,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var nav: UINavigationController!
+    var vc: ViewController!
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        let vc = ViewController.init()
+        vc = ViewController.init()
         vc.functionality = .createPattern(3)
         vc.delegate = self
-        nav = UINavigationController(rootViewController: vc)
-        window?.rootViewController = nav
+        window?.rootViewController = vc
         return true
     }
 
@@ -54,16 +54,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: PatternDelegate {
     func created(pattern: [Int]) {
-        let vc = ViewController.init()
         vc.functionality = .viewPattern(pattern)
-        nav.pushViewController(vc, animated: true)
+//        vc.functionality = .checkPattern(pattern)
     }
 
     func failedCreatingPattern(lenght: Int) {
-
     }
 
     func introducedPattern(ok: Bool) {
+        if ok {
+//            vc.functionality = .viewPattern([0,1,2,3,4,5,6,7,8])
+        } else {
+//            vc.functionality = .createPattern(3)
+        }
 
     }
 
