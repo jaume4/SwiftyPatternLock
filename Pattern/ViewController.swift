@@ -106,7 +106,7 @@ public class SamplePatternView: UIView, PatternContainedView {
 
 public class ViewController: UIViewController {
 
-    private weak var delegate: PatternDelegate?
+    public weak var delegate: PatternDelegate?
 
     private var locationOfBeganTap: CGPoint!
     private var locationOfEndTap: CGPoint!
@@ -124,9 +124,9 @@ public class ViewController: UIViewController {
             updateViews()
         }
     }
-    private var numberOfItemsPerRow = 10
+    private var numberOfItemsPerRow = 3
     private var interpolate = false
-    private var functionality: PatternFunctionality!
+    public var functionality: PatternFunctionality!
     private let animationBaseDuration = 0.3
 
     override public func viewDidLoad() {
@@ -134,18 +134,19 @@ public class ViewController: UIViewController {
         super.viewDidLoad()
         addSubViews()
 
-            functionality = PatternFunctionality.createPattern(3)
+//            functionality = PatternFunctionality.createPattern(3)
 //            functionality = PatternFunctionality.checkPattern([0,3,6,7])
 //        functionality = PatternFunctionality.viewPattern([2, 1, 4, 3, 0, 7, 6, 5, 8])
 //        functionality = .viewPattern([0, 7, 2, 3, 8, 1, 6, 5, 4])
 //        functionality = .viewPattern([0, 5, 16, 21, 22, 13, 8, 3, 2, 6, 12, 18, 24, 19, 14, 9, 4, 17, 10, 11, 7, 1, 15])
-        functionality = .viewPattern([0, 10, 20, 30, 40, 50, 60, 70, 71, 72, 73, 74, 75, 66, 57, 47, 37, 26, 25, 24, 23, 33, 54, 85, 96, 95, 94, 84, 64, 55, 27, 3, 13, 34, 44, 53, 62, 51, 41, 31, 5, 6, 7, 8, 18, 28, 38, 48, 58, 68, 78, 87, 86, 63, 43, 19, 29, 39, 49, 59, 69, 79, 89, 98, 97, 93, 92, 91, 80, 61, 22, 12, 1, 11, 21, 42, 76, 77, 88, 99])
+//        functionality = .viewPattern([0, 10, 20, 30, 40, 50, 60, 70, 71, 72, 73, 74, 75, 66, 57, 47, 37, 26, 25, 24, 23, 33, 54, 85, 96, 95, 94, 84, 64, 55, 27, 3, 13, 34, 44, 53, 62, 51, 41, 31, 5, 6, 7, 8, 18, 28, 38, 48, 58, 68, 78, 87, 86, 63, 43, 19, 29, 39, 49, 59, 69, 79, 89, 98, 97, 93, 92, 91, 80, 61, 22, 12, 1, 11, 21, 42, 76, 77, 88, 99])
 
     }
 
     override public func viewDidLayoutSubviews() {
 
         super.viewDidLayoutSubviews()
+
         recalculatedCenters = false
         DispatchQueue.main.async {
             let isHigh = self.view.bounds.width < self.view.bounds.height
@@ -160,7 +161,7 @@ public class ViewController: UIViewController {
 
     func addSubViews() {
 
-        view.backgroundColor = .clear
+        view.backgroundColor = .black
         var stacks = [UIStackView]()
         patternDotViews = [UIView & PatternContainedView]()
 
@@ -483,7 +484,7 @@ extension ViewController { //Helper math funcs
         recalculatedCenters = true
         var calculatedMinDistance = false
 
-        centers = patternDotViews.compactMap {
+        let newCenters: [CGPoint] = patternDotViews.compactMap {
 
             if !calculatedMinDistance {
                 minDistance = $0.frame.width / 3
@@ -494,6 +495,9 @@ extension ViewController { //Helper math funcs
             return $0.convert($0.bounds, to: parentStack).center
 
         }
+
+        guard newCenters != centers else { return }
+        centers = newCenters
 
         if case let .viewPattern(pattern)? = functionality {
 
@@ -511,9 +515,8 @@ extension ViewController { //Helper math funcs
                 return
 
             }
+
             passedPoints = pattern
-            drawPattern(indices: pattern)
         }
     }
-
 }
