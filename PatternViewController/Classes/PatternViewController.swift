@@ -36,7 +36,7 @@ public struct PatternViewConfig {
     let lineDefaultColor: CGColor
     let lineValidColor: CGColor
     let lineInvalidColor: CGColor
-    let numberOfItemsPerRow: Int
+    let gridSize: Int
 
     public init(backroundColor: UIColor, lineWidth: CGFloat, lineDefaultColor: CGColor, lineValidColor: CGColor, lineInvalidColor: CGColor, numberOfItemsPerRow: Int) {
         self.backroundColor = backroundColor
@@ -44,7 +44,7 @@ public struct PatternViewConfig {
         self.lineDefaultColor = lineDefaultColor
         self.lineValidColor = lineValidColor
         self.lineInvalidColor = lineInvalidColor
-        self.numberOfItemsPerRow = numberOfItemsPerRow
+        self.gridSize = numberOfItemsPerRow
     }
 
 }
@@ -85,7 +85,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     private var centers: [CGPoint]!
     private var minDistance: CGFloat!
     private var passedPointsIndices: [Int]!
-    private var numberOfItemsPerRow: Int!
+    private var gridSize: Int!
     private var interpolate = false
     public var functionality: PatternFunctionality! {
         didSet { updateViews() }
@@ -111,8 +111,11 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     }
 
     public func setup(_ config: PatternViewConfig) {
+
+        guard config.gridSize > 1 else { return }
+
         self.config = config
-        self.numberOfItemsPerRow = config.numberOfItemsPerRow
+        self.gridSize = config.gridSize
         view.backgroundColor = config.backroundColor
 
         addSubViews()
@@ -123,13 +126,13 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         var stacks = [UIStackView]()
         patternDotViews = [T]()
 
-        for _ in 0..<numberOfItemsPerRow {
+        for _ in 0..<gridSize {
             let stack = UIStackView()
             stack.axis = .horizontal
             stack.translatesAutoresizingMaskIntoConstraints = false
             stack.distribution = .fillEqually
             stacks.append(stack)
-            for _ in 0..<numberOfItemsPerRow {
+            for _ in 0..<gridSize {
                 let view = T()
                 view.update(state: .notSelected)
                 view.translatesAutoresizingMaskIntoConstraints = false
@@ -307,7 +310,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
             let patternSet = Set(pattern)
 
             guard patternSet.count == pattern.count,
-                let max = pattern.max(), max < numberOfItemsPerRow * numberOfItemsPerRow,
+                let max = pattern.max(), max < gridSize * gridSize,
                 let min = pattern.min(), min >= 0 else { //Invalid pattern
 
                     if #available(iOS 12.0, *) {
@@ -462,14 +465,14 @@ extension PatternViewController { //Helper math and calculator funcs
 
     func calculatePoint(index: Int) -> IntPoint {
 
-        let indexX = index / numberOfItemsPerRow
-        let indexY = index % numberOfItemsPerRow
+        let indexX = index / gridSize
+        let indexY = index % gridSize
         return (indexX, indexY)
     }
 
     func calculateIndex(for point: IntPoint) -> Int {
 
-        return point.x * numberOfItemsPerRow + point.y
+        return point.x * gridSize + point.y
     }
 
     func calculatePointCenters() {
