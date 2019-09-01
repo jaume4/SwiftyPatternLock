@@ -509,7 +509,6 @@ extension ViewController { //Helper math funcs
                 calculatedMinDistance = true
             }
 
-            $0.layer.cornerRadius = $0.frame.width / 2
             return $0.convert($0.bounds, to: parentStack).center
 
         }
