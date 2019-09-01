@@ -9,18 +9,6 @@
 import UIKit
 import os.log
 
-extension UIView {
-    func pinEdges(to other: UIView) {
-        NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: other.leadingAnchor),
-            trailingAnchor.constraint(equalTo: other.trailingAnchor),
-            topAnchor.constraint(equalTo: other.topAnchor),
-            bottomAnchor.constraint(equalTo: other.bottomAnchor)
-            ])
-
-    }
-}
-
 extension CGPoint {
     func distance(from point: CGPoint) -> CGFloat {
         let dx = point.x - x
@@ -46,6 +34,7 @@ public protocol PatternDelegate: class {
     func created(pattern: [Int])
     func failedCreatingPattern(lenght: Int)
     func introducedPattern(ok: Bool)
+    func endedShowingPattern()
 
 }
 
@@ -151,9 +140,6 @@ public class ViewController: UIViewController {
             self.widthAnchor.isActive = isHigh
             self.heightAnchor.isActive = !isHigh
             self.calculatePointCenters()
-            if let points = self.passedPoints {
-                self.drawPattern(indices: points)
-            }
         }
     }
 
@@ -401,12 +387,16 @@ public class ViewController: UIViewController {
             return (totalSum / sum) * Double(passedPoints.count) * animationBaseDuration
 
         }
-        passedPoints.enumerated().forEach {
+        passedPoints.enumerated().forEach { (offset, element) in
 
-            let view = patternDotViews[$0.element]
-            UIView.animate(withDuration: 0.5, delay: animate ? (delays[$0.offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
+            let view = patternDotViews[element]
+            UIView.animate(withDuration: 0.5, delay: animate ? (delays[offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
                 view.update(state: .selected)
-            }, completion: nil)
+            }, completion: { [weak self] _ in
+                if animate && offset + 1 == self?.passedPoints?.count { //Shown last pattern dot
+                    self?.delegate?.endedShowingPattern()
+                }
+            })
         }
 
         CATransaction.commit()

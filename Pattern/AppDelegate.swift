@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var nav: UINavigationController!
     var vc: ViewController!
+    var pattern: [Int]!
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -54,24 +55,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: PatternDelegate {
     func created(pattern: [Int]) {
-//              vc.functionality = .viewPattern(pattern)
 
-        vc.functionality = .checkPattern(pattern)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.vc.functionality = .checkPattern(pattern)
+            self.pattern = pattern
+        }
+
     }
 
     func failedCreatingPattern(lenght: Int) {
     }
 
     func introducedPattern(ok: Bool) {
-        if ok {
-            vc.functionality = .viewPattern([0,1,2,3,4,5,6,7,8])
-        } else {
-            vc.functionality = .createPattern(3)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            if ok {
+                self.vc.functionality = .viewPattern(self.pattern)
+            } else {
+                self.vc.functionality = .createPattern(3)
+            }
         }
-
     }
 
-
+    func endedShowingPattern() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.vc.functionality = .createPattern(3)
+        }
+    }
 
 }
 
