@@ -175,11 +175,11 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         guard recalculatedCenters else { return }
 
         CATransaction.begin()
-        UIView.animate(withDuration: animationBaseDuration) {
+        UIView.animate(withDuration: animationBaseDuration, delay: 0, options: .beginFromCurrentState, animations: {
             self.patternDotViews.forEach{ $0.update(state: .notSelected) }
             self.drawingLayer?.removeAllAnimations()
             self.drawingLayer?.path = nil
-        }
+        }, completion: nil)
         CATransaction.commit()
 
     }
