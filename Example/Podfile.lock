@@ -1,0 +1,16 @@
+PODS:
+  - PatternViewController (0.1.0)
+
+DEPENDENCIES:
+  - PatternViewController (from `../`)
+
+EXTERNAL SOURCES:
+  PatternViewController:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  PatternViewController: ae5cdfb1d08824c1ae5574e10d640ec60cbd2295
+
+PODFILE CHECKSUM: 05cfb9e7d97e559a5c85ac7b0312a451fd80a52a
+
+COCOAPODS: 1.7.5

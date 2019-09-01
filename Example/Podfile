@@ -1,0 +1,11 @@
+#use_frameworks!
+
+target 'PatternView-Sample' do
+  pod 'PatternViewController', :path => '../'
+
+  target 'PatternView-Sample-Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

@@ -1,6 +1,6 @@
 //
-//  ViewController.swift
-//  Pattern
+//  PatternViewController.swift
+//  PatternViewController
 //
 //  Created by jaume on 28/08/2019.
 //  Copyright © 2019 Jaume. All rights reserved.
@@ -93,7 +93,7 @@ public class SamplePatternView: UIView, PatternContainedView {
     }
 }
 
-public class ViewController: UIViewController {
+public class PatternViewController: UIViewController {
 
     public weak var delegate: PatternDelegate?
 
@@ -120,13 +120,6 @@ public class ViewController: UIViewController {
 
         super.viewDidLoad()
         addSubViews()
-
-//            functionality = PatternFunctionality.createPattern(3)
-//            functionality = PatternFunctionality.checkPattern([0,3,6,7])
-//        functionality = PatternFunctionality.viewPattern([2, 1, 4, 3, 0, 7, 6, 5, 8])
-//        functionality = .viewPattern([0, 7, 2, 3, 8, 1, 6, 5, 4])
-//        functionality = .viewPattern([0, 5, 16, 21, 22, 13, 8, 3, 2, 6, 12, 18, 24, 19, 14, 9, 4, 17, 10, 11, 7, 1, 15])
-//        functionality = .viewPattern([0, 10, 20, 30, 40, 50, 60, 70, 71, 72, 73, 74, 75, 66, 57, 47, 37, 26, 25, 24, 23, 33, 54, 85, 96, 95, 94, 84, 64, 55, 27, 3, 13, 34, 44, 53, 62, 51, 41, 31, 5, 6, 7, 8, 18, 28, 38, 48, 58, 68, 78, 87, 86, 63, 43, 19, 29, 39, 49, 59, 69, 79, 89, 98, 97, 93, 92, 91, 80, 61, 22, 12, 1, 11, 21, 42, 76, 77, 88, 99])
 
     }
 
@@ -403,7 +396,7 @@ public class ViewController: UIViewController {
     }
 }
 
-extension ViewController { //Helper math funcs
+extension PatternViewController { //Helper math funcs
 
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
 

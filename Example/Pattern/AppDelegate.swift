@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import PatternViewController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var nav: UINavigationController!
-    var vc: ViewController!
+    var vc: PatternViewController!
     var pattern: [Int]!
 
 
@@ -21,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        vc = ViewController.init()
+        vc = PatternViewController.init()
         vc.functionality = .createPattern(3)
         vc.delegate = self
         window?.rootViewController = vc
