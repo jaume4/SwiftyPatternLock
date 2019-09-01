@@ -93,7 +93,7 @@ public class SamplePatternView: UIView, PatternContainedView {
     }
 }
 
-public class PatternViewController: UIViewController {
+public class PatternViewController<T: PatternContainedView>: UIViewController {
 
     public weak var delegate: PatternDelegate?
 
@@ -104,7 +104,7 @@ public class PatternViewController: UIViewController {
     private var heightAnchor: NSLayoutConstraint!
 
     private var parentStack: UIStackView!
-    private var patternDotViews: [UIView & PatternContainedView]!
+    private var patternDotViews: [T]!
     private var drawingLayer: CAShapeLayer!
     private var centers: [CGPoint]!
     private var minDistance: CGFloat!
@@ -140,7 +140,7 @@ public class PatternViewController: UIViewController {
 
         view.backgroundColor = .black
         var stacks = [UIStackView]()
-        patternDotViews = [UIView & PatternContainedView]()
+        patternDotViews = [T]()
 
         for _ in 0..<numberOfItemsPerRow {
             let stack = UIStackView()
@@ -149,7 +149,7 @@ public class PatternViewController: UIViewController {
             stack.distribution = .fillEqually
             stacks.append(stack)
             for _ in 0..<numberOfItemsPerRow {
-                let view = SamplePatternView()
+                let view = T()
                 view.update(state: .notSelected)
                 view.translatesAutoresizingMaskIntoConstraints = false
                 stack.addArrangedSubview(view)
