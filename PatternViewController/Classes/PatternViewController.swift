@@ -33,13 +33,17 @@ public struct PatternViewConfig {
 
     let backroundColor: UIColor
     let lineWidth: CGFloat
-    let lineColor: CGColor
+    let lineDefaultColor: CGColor
+    let lineValidColor: CGColor
+    let lineInvalidColor: CGColor
     let numberOfItemsPerRow: Int
 
-    public init(backroundColor: UIColor, lineWidth: CGFloat, lineColor: CGColor, numberOfItemsPerRow: Int) {
+    public init(backroundColor: UIColor, lineWidth: CGFloat, lineDefaultColor: CGColor, lineValidColor: CGColor, lineInvalidColor: CGColor, numberOfItemsPerRow: Int) {
         self.backroundColor = backroundColor
         self.lineWidth = lineWidth
-        self.lineColor = lineColor
+        self.lineDefaultColor = lineDefaultColor
+        self.lineValidColor = lineValidColor
+        self.lineInvalidColor = lineInvalidColor
         self.numberOfItemsPerRow = numberOfItemsPerRow
     }
 
@@ -153,7 +157,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     func setupShapeLayer() {
         drawingLayer = CAShapeLayer()
         parentStack.layer.insertSublayer(drawingLayer, above: parentStack.layer)
-        drawingLayer.strokeColor = config.lineColor
+        drawingLayer.strokeColor = config.lineDefaultColor
         drawingLayer.lineWidth = config.lineWidth
         drawingLayer.lineCap = .round
         drawingLayer.lineJoin = .round
@@ -179,6 +183,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
             self.patternDotViews.forEach{ $0.update(state: .notSelected) }
             self.drawingLayer?.removeAllAnimations()
             self.drawingLayer?.path = nil
+            self.drawingLayer?.strokeColor = self.config.lineDefaultColor
         }, completion: nil)
         CATransaction.commit()
 
@@ -187,8 +192,11 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     func updateViews(validPattern: Bool) {
 
         CATransaction.begin()
-        passedPointsIndices.forEach{
-            patternDotViews[$0].update(state: validPattern ? .success : .error)
+        UIView.animate(withDuration: animationBaseDuration) {
+            self.drawingLayer?.strokeColor =  validPattern ? self.config.lineValidColor : self.config.lineInvalidColor
+            self.passedPointsIndices.forEach{
+                self.patternDotViews[$0].update(state: validPattern ? .success : .error)
+            }
         }
         CATransaction.commit()
 

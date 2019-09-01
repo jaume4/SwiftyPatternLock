@@ -44,7 +44,7 @@ final class SampleViewController: UIViewController {
 
     func configPatternVC() {
 
-        let config = PatternViewConfig(backroundColor: .white, lineWidth: 4, lineColor: UIColor.darkGray.cgColor, numberOfItemsPerRow: 4)
+        let config = PatternViewConfig(backroundColor: .white, lineWidth: 4, lineDefaultColor: UIColor.darkGray.cgColor, lineValidColor: UIColor.green.cgColor, lineInvalidColor: UIColor.red.cgColor, numberOfItemsPerRow: 4)
         vc.setup(config)
 
     }
