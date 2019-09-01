@@ -72,8 +72,8 @@ extension SampleViewController: PatternDelegate {
         print("Failed creating pattern")
     }
 
-    func introducedPattern(ok: Bool) {
-        print("Introduced pattarn matches pattern: \(ok)")
+    func introducedPattern(valid: Bool) {
+        print("Introduced pattarn is a match: \(valid)")
     }
 
     func endedShowingPattern() {

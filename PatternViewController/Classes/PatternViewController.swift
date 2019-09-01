@@ -49,7 +49,7 @@ public protocol PatternDelegate: class {
 
     func created(pattern: [Int])
     func failedCreatingPattern(lenght: Int)
-    func introducedPattern(ok: Bool)
+    func introducedPattern(valid: Bool)
     func endedShowingPattern()
 
 }
@@ -125,8 +125,8 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     private var drawingLayer: CAShapeLayer!
     private var centers: [CGPoint]!
     private var minDistance: CGFloat!
-    private var passedPoints: [Int]!
-    private var numberOfItemsPerRow = 3
+    private var passedPointsIndices: [Int]!
+    private var numberOfItemsPerRow: Int!
     private var interpolate = false
     public var functionality: PatternFunctionality! {
         didSet { updateViews() }
@@ -145,6 +145,9 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
             self.widthAnchor.isActive = isHigh
             self.heightAnchor.isActive = !isHigh
             self.calculatePointCenters()
+            if let drawingLayer = self.drawingLayer, let points = self.passedPointsIndices, let path = self.calculatePath(for: points) { //Recalculate path
+                drawingLayer.path = path.cgPath
+            }
         }
     }
 
@@ -192,15 +195,48 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         parentStack.addGestureRecognizer(panGesture)
     }
 
+    func setupShapeLayer() {
+        drawingLayer = CAShapeLayer()
+        parentStack.layer.insertSublayer(drawingLayer, above: parentStack.layer)
+        drawingLayer.strokeColor = config.lineColor
+        drawingLayer.lineWidth = config.lineWidth
+        drawingLayer.lineCap = .round
+        drawingLayer.lineJoin = .round
+    }
+
     func updateViews() {
 
         if case .viewPattern(let pattern)? = functionality {
             resetViews()
-            passedPoints = pattern
-            drawPattern(indices: passedPoints)
+            passedPointsIndices = pattern
+            draw(indices: passedPointsIndices)
         } else {
             resetViews()
         }
+    }
+
+    func resetViews() {
+
+        guard recalculatedCenters else { return }
+
+        CATransaction.begin()
+        UIView.animate(withDuration: animationBaseDuration) {
+            self.patternDotViews.forEach{ $0.update(state: .notSelected) }
+            self.drawingLayer?.removeAllAnimations()
+            self.drawingLayer?.path = nil
+        }
+        CATransaction.commit()
+
+    }
+
+    func updateViews(validPattern: Bool) {
+
+        CATransaction.begin()
+        passedPointsIndices.forEach{
+            patternDotViews[$0].update(state: validPattern ? .success : .error)
+        }
+        CATransaction.commit()
+
     }
 
     @objc func didMove(gesture: UIPanGestureRecognizer) {
@@ -216,7 +252,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
             calculatePointCenters()
             locationOfBeganTap = gesture.location(in: parentStack)
             let nearest = nearestPoint(from: locationOfBeganTap)
-            passedPoints = [nearest.index]
+            passedPointsIndices = [nearest.index]
             locationOfBeganTap = centers[nearest.index]
             locationOfEndTap = gesture.location(in: parentStack)
             checkIfIsPassingPoint(index: nearest.index, distance: nearest.distance)
@@ -244,105 +280,54 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         switch functionality {
         case .createPattern(let min)?:
 
-            let isValid = passedPoints.count >= min
+            let isValid = passedPointsIndices.count >= min
             if isValid {
-                delegate?.created(pattern: passedPoints)
+                delegate?.created(pattern: passedPointsIndices)
             } else {
                 updateViews(validPattern: false)
-                delegate?.failedCreatingPattern(lenght: passedPoints.count)
+                delegate?.failedCreatingPattern(lenght: passedPointsIndices.count)
             }
 
         case .checkPattern(let values)?:
 
-            let isValid = passedPoints == values
+            let isValid = passedPointsIndices == values
             updateViews(validPattern: isValid)
-            delegate?.introducedPattern(ok: isValid)
+            delegate?.introducedPattern(valid: isValid)
 
         default: return
         }
     }
 
-    func resetViews() {
-
-        guard recalculatedCenters else { return }
-
-        CATransaction.begin()
-        UIView.animate(withDuration: animationBaseDuration) {
-            self.patternDotViews.forEach{ $0.update(state: .notSelected) }
-            self.drawingLayer?.path = nil
-        }
-        CATransaction.commit()
-
-
-    }
-
-    func updateViews(validPattern: Bool) {
-
-        CATransaction.begin()
-        passedPoints.forEach{
-            patternDotViews[$0].update(state: validPattern ? .success : .error)
-        }
-        CATransaction.commit()
-
-    }
-
-    func drawPattern(indices: [Int]) {
-        draw(indices: indices, endPoint: nil)
-    }
-
     func checkIfIsPassingPoint(index: Int, distance: CGFloat, isEnd: Bool = false) {
 
-        defer { draw(indices: passedPoints, endPoint: isEnd ? nil : locationOfEndTap) }
+        defer { draw(indices: passedPointsIndices, endPoint: isEnd ? nil : locationOfEndTap) }
 
         guard distance < minDistance else { return }
 
-        let point1 = calculatePoint(from: passedPoints.last!)
-        let point2 = calculatePoint(from: index)
+        let point1 = calculatePoint(index: passedPointsIndices.last!)
+        let point2 = calculatePoint(index: index)
 
         let points = calculateLine(startPoint: point1, endPoint: point2)
         let indices = points.map { calculateIndex(for: $0) }
 
-        if !passedPoints.contains(index) {
+        if !passedPointsIndices.contains(index) {
             if !points.isEmpty {
-                passedPoints.append(contentsOf: indices.filter{ !passedPoints.contains($0) })
+                passedPointsIndices.append(contentsOf: indices.filter{ !passedPointsIndices.contains($0) })
             } else {
-                passedPoints.append(index)
+                passedPointsIndices.append(index)
             }
         }
 
     }
 
-    func calculatePath(for points: [Int]) -> UIBezierPath? {
+    func draw(indices: [Int], endPoint: CGPoint? = nil) {
 
-        guard let first = points.first else { return nil }
-
-        let path = UIBezierPath()
-        path.move(to: centers[first])
-        for i in 1..<points.count {
-            let point = points[i]
-            path.addLine(to: centers[point])
-            path.move(to: centers[point])
-        }
-
-        return path
-
-    }
-
-    func draw(indices: [Int], endPoint: CGPoint?) {
-
-        if drawingLayer == nil {
-            drawingLayer = CAShapeLayer()
-            parentStack.layer.insertSublayer(drawingLayer, above: parentStack.layer)
-            drawingLayer.strokeColor = config.lineColor
-            drawingLayer.lineWidth = config.lineWidth
-            drawingLayer.lineCap = .round
-            drawingLayer.lineJoin = .round
-        }
+        if drawingLayer == nil { setupShapeLayer() }
 
         guard let path = calculatePath(for: indices) else { return }
         if let endPoint = endPoint { path.addLine(to: endPoint) }
 
-        let points = passedPoints.map { calculatePoint(from: $0) }
+        let points = passedPointsIndices.map { calculatePoint(index: $0) }
         let distances: [Double] = points.enumerated().map{
             if $0.offset == 0 { return 0 }
             return distance(from: $0.element, to: points[$0.offset - 1])
@@ -371,7 +356,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
 
             }
 
-            passedPoints = pattern
+            passedPointsIndices = pattern
 
             let pathAnimation = CAKeyframeAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
             let values: [NSNumber] = distances.map {
@@ -383,7 +368,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
 
             pathAnimation.keyTimes = values
             pathAnimation.values = values
-            pathAnimation.duration = Double(passedPoints.count) * animationBaseDuration
+            pathAnimation.duration = Double(passedPointsIndices.count) * animationBaseDuration
             drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
         } else {
             animate = false
@@ -396,16 +381,16 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         let delays: [Double] = distances.map {
 
             totalSum += $0
-            return (totalSum / sum) * Double(passedPoints.count) * animationBaseDuration
+            return (totalSum / sum) * Double(passedPointsIndices.count) * animationBaseDuration
 
         }
-        passedPoints.enumerated().forEach { (offset, element) in
+        passedPointsIndices.enumerated().forEach { (offset, element) in
 
             let view = patternDotViews[element]
-            UIView.animate(withDuration: 0.5, delay: animate ? (delays[offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
+            UIView.animate(withDuration: animationBaseDuration, delay: animate ? (delays[offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
                 view.update(state: .selected)
             }, completion: { [weak self] _ in
-                if animate && offset + 1 == self?.passedPoints?.count { //Shown last pattern dot
+                if animate && offset + 1 == self?.passedPointsIndices?.count { //Shown last pattern dot
                     self?.delegate?.endedShowingPattern()
                 }
             })
@@ -415,7 +400,23 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     }
 }
 
-extension PatternViewController { //Helper math funcs
+extension PatternViewController { //Helper math and calculator funcs
+
+    func calculatePath(for points: [Int]) -> UIBezierPath? {
+
+        guard let first = points.first else { return nil }
+
+        let path = UIBezierPath()
+        path.move(to: centers[first])
+        for i in 1..<points.count {
+            let point = points[i]
+            path.addLine(to: centers[point])
+            path.move(to: centers[point])
+        }
+
+        return path
+
+    }
 
     func nearestPoint(from point: CGPoint) -> (index: Int, distance: CGFloat) {
 
@@ -496,7 +497,7 @@ extension PatternViewController { //Helper math funcs
         return points
     }
 
-    func calculatePoint(from index: Int) -> IntPoint {
+    func calculatePoint(index: Int) -> IntPoint {
 
         let indexX = index / numberOfItemsPerRow
         let indexY = index % numberOfItemsPerRow
