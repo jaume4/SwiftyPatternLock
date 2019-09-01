@@ -13,7 +13,9 @@ final class SampleViewController: UIViewController {
 
     @IBOutlet weak var containerView: UIView!
 
-    var vc: PatternViewController<SamplePatternView>!
+//    Provide a PatternContainedView
+//    var vc: PatternViewController<SamplePatternView>!
+    var vc: PatternViewController<SamplePatternSquareView>!
     var pattern: [Int]!
 
     override func viewDidLoad() {
@@ -25,7 +27,8 @@ final class SampleViewController: UIViewController {
     }
 
     func addPatternVC() {
-        vc = PatternViewController<SamplePatternView>()
+//        vc = PatternViewController<SamplePatternDotView>()
+        vc = PatternViewController<SamplePatternSquareView>()
         vc.view.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(vc.view)
         NSLayoutConstraint.activate([

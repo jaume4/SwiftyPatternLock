@@ -14,6 +14,8 @@
 		1F33AA6E231B206A00FE899A /* PatternUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F33AA6D231B206A00FE899A /* PatternUITests.swift */; };
 		1F9EA21A231C380C0097968B /* Sample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F9EA219231C380C0097968B /* Sample.storyboard */; };
 		1F9EA21C231C385B0097968B /* SamplePatternViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EA21B231C385B0097968B /* SamplePatternViewController.swift */; };
+		1F9EA21E231C46260097968B /* SamplePatternDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EA21D231C46260097968B /* SamplePatternDotView.swift */; };
+		1F9EA220231C46880097968B /* SamplePatternSquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */; };
 		A95123F72D594AD42D8E2F57 /* libPods-PatternView-Sample-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AA9FE4442601FAD66E384B1 /* libPods-PatternView-Sample-Tests.a */; };
 		B3A8F3C0943900C61EC86C00 /* libPods-PatternView-Sample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69ECD7CBFDC391EC12E5F75E /* libPods-PatternView-Sample.a */; };
 /* End PBXBuildFile section */
@@ -53,6 +55,8 @@
 		1F68767B231C328F00003A9A /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SampleCode.xcconfig; sourceTree = "<group>"; };
 		1F9EA219231C380C0097968B /* Sample.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Sample.storyboard; sourceTree = "<group>"; };
 		1F9EA21B231C385B0097968B /* SamplePatternViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePatternViewController.swift; sourceTree = "<group>"; };
+		1F9EA21D231C46260097968B /* SamplePatternDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePatternDotView.swift; sourceTree = "<group>"; };
+		1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePatternSquareView.swift; sourceTree = "<group>"; };
 		2FECAD394C5D499E6CE63D6A /* Pods-PatternView_Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView_Sample.debug.xcconfig"; path = "Target Support Files/Pods-PatternView_Sample/Pods-PatternView_Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		493F38929F01B04D8C1967DB /* Pods-PatternView-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView-Sample.release.xcconfig"; path = "Target Support Files/Pods-PatternView-Sample/Pods-PatternView-Sample.release.xcconfig"; sourceTree = "<group>"; };
 		4AA9FE4442601FAD66E384B1 /* libPods-PatternView-Sample-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PatternView-Sample-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +121,8 @@
 			children = (
 				1F33AA4D231B206800FE899A /* AppDelegate.swift */,
 				1F9EA21B231C385B0097968B /* SamplePatternViewController.swift */,
+				1F9EA21D231C46260097968B /* SamplePatternDotView.swift */,
+				1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */,
 				1F9EA219231C380C0097968B /* Sample.storyboard */,
 				1F33AA54231B206A00FE899A /* Assets.xcassets */,
 				1F33AA56231B206A00FE899A /* LaunchScreen.storyboard */,
@@ -355,8 +361,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F9EA220231C46880097968B /* SamplePatternSquareView.swift in Sources */,
 				1F33AA4E231B206800FE899A /* AppDelegate.swift in Sources */,
 				1F9EA21C231C385B0097968B /* SamplePatternViewController.swift in Sources */,
+				1F9EA21E231C46260097968B /* SamplePatternDotView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
