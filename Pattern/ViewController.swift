@@ -269,8 +269,10 @@ public class ViewController: UIViewController {
         guard recalculatedCenters else { return }
 
         CATransaction.begin()
-        patternDotViews.forEach{ $0.update(state: .notSelected) }
-        drawingLayer?.path = nil
+        UIView.animate(withDuration: 0.3) {
+            self.patternDotViews.forEach{ $0.update(state: .notSelected) }
+            self.drawingLayer?.path = nil
+        }
         CATransaction.commit()
 
 
@@ -402,7 +404,7 @@ public class ViewController: UIViewController {
         passedPoints.enumerated().forEach {
 
             let view = patternDotViews[$0.element]
-            UIView.animate(withDuration: 0.5, delay: animate ? (delays[$0.offset] - 0.1) : 0, options: .beginFromCurrentState, animations: {
+            UIView.animate(withDuration: 0.5, delay: animate ? (delays[$0.offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
                 view.update(state: .selected)
             }, completion: nil)
         }
