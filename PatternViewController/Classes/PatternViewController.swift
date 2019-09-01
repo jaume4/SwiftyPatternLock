@@ -29,6 +29,22 @@ public enum PatternFunctionality {
     case createPattern(Int), checkPattern([Int]), viewPattern([Int])
 }
 
+public struct PatternViewConfig {
+
+    let backroundColor: UIColor
+    let lineWidth: CGFloat
+    let lineColor: CGColor
+    let numberOfItemsPerRow: Int
+
+    public init(backroundColor: UIColor, lineWidth: CGFloat, lineColor: CGColor, numberOfItemsPerRow: Int) {
+        self.backroundColor = backroundColor
+        self.lineWidth = lineWidth
+        self.lineColor = lineColor
+        self.numberOfItemsPerRow = numberOfItemsPerRow
+    }
+
+}
+
 public protocol PatternDelegate: class {
 
     func created(pattern: [Int])
@@ -103,6 +119,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     private var widthAnchor: NSLayoutConstraint!
     private var heightAnchor: NSLayoutConstraint!
 
+    private var config: PatternViewConfig!
     private var parentStack: UIStackView!
     private var patternDotViews: [T]!
     private var drawingLayer: CAShapeLayer!
@@ -116,16 +133,11 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     }
     private let animationBaseDuration = 0.3
 
-    override public func viewDidLoad() {
-
-        super.viewDidLoad()
-        addSubViews()
-
-    }
-
     override public func viewDidLayoutSubviews() {
 
         super.viewDidLayoutSubviews()
+
+        guard config != nil else { return }
 
         recalculatedCenters = false
         DispatchQueue.main.async {
@@ -136,9 +148,16 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         }
     }
 
+    public func setup(_ config: PatternViewConfig) {
+        self.config = config
+        self.numberOfItemsPerRow = config.numberOfItemsPerRow
+        view.backgroundColor = config.backroundColor
+
+        addSubViews()
+    }
+
     func addSubViews() {
 
-        view.backgroundColor = .black
         var stacks = [UIStackView]()
         patternDotViews = [T]()
 
@@ -248,7 +267,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         guard recalculatedCenters else { return }
 
         CATransaction.begin()
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: animationBaseDuration) {
             self.patternDotViews.forEach{ $0.update(state: .notSelected) }
             self.drawingLayer?.path = nil
         }
@@ -314,8 +333,8 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         if drawingLayer == nil {
             drawingLayer = CAShapeLayer()
             parentStack.layer.insertSublayer(drawingLayer, above: parentStack.layer)
-            drawingLayer.strokeColor = UIColor.white.cgColor
-            drawingLayer.lineWidth = 3
+            drawingLayer.strokeColor = config.lineColor
+            drawingLayer.lineWidth = config.lineWidth
             drawingLayer.lineCap = .round
             drawingLayer.lineJoin = .round
         }

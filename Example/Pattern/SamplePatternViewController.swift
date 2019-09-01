@@ -20,6 +20,7 @@ final class SampleViewController: UIViewController {
         super.viewDidLoad()
 
         addPatternVC()
+        configPatternVC()
 
     }
 
@@ -36,6 +37,13 @@ final class SampleViewController: UIViewController {
 
         addChild(vc)
         vc.delegate = self
+    }
+
+    func configPatternVC() {
+
+        let config = PatternViewConfig(backroundColor: .white, lineWidth: 4, lineColor: UIColor.darkGray.cgColor, numberOfItemsPerRow: 4)
+        vc.setup(config)
+
     }
 
     @IBAction func create(_ sender: Any) {
