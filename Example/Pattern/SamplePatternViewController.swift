@@ -55,6 +55,7 @@ final class SampleViewController: UIViewController {
     }
 
     @IBAction func create(_ sender: Any) {
+        pattern = nil
         vc.functionality = .createPattern(3)
     }
 
