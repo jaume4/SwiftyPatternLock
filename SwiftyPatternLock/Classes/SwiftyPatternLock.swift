@@ -1,6 +1,6 @@
 //
-//  PatternViewController.swift
-//  PatternViewController
+//  SwiftyPatternLock.swift
+//  SwiftyPatternLock
 //
 //  Created by jaume on 28/08/2019.
 //  Copyright © 2019 Jaume. All rights reserved.
@@ -68,7 +68,7 @@ public protocol PatternContainedView: UIView {
     func update(state: PatternContainedViewState)
 }
 
-public class PatternViewController<T: PatternContainedView>: UIViewController {
+public class SwiftyPatternLock<T: PatternContainedView>: UIViewController {
 
     public weak var delegate: PatternDelegate?
 
@@ -375,7 +375,7 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
     }
 }
 
-extension PatternViewController { //Helper math and calculator funcs
+extension SwiftyPatternLock { //Helper math and calculator funcs
 
     func calculatePath(for points: [Int]) -> UIBezierPath? {
 

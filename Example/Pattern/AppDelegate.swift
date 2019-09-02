@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PatternViewController
+import SwiftyPatternLock
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

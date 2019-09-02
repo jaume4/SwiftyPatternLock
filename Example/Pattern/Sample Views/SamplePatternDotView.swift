@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PatternViewController
+import SwiftyPatternLock
 
 public class SamplePatternDotView: UIView, PatternContainedView {
 

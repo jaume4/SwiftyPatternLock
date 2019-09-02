@@ -7,14 +7,34 @@
 //
 
 import UIKit
-import PatternViewController
+import SwiftyPatternLock
+
+extension UIViewController {
+
+    @discardableResult
+    func addContainedChildViewController<T: UIViewController>(_ vc: T.Type, onView: UIView) -> T {
+
+        let viewController = vc.init()
+        onView.addSubview(viewController.view)
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            viewController.view.leadingAnchor.constraint(equalTo: onView.leadingAnchor),
+            viewController.view.trailingAnchor.constraint(equalTo: onView.trailingAnchor),
+            viewController.view.topAnchor.constraint(equalTo: onView.topAnchor),
+            viewController.view.bottomAnchor.constraint(equalTo: onView.bottomAnchor)
+            ])
+
+        addChild(viewController)
+        return viewController
+
+    }
+}
 
 final class SampleViewController: UIViewController {
 
     @IBOutlet weak var containerView: UIView!
 
-//    Provide a PatternContainedView
-    var vc: PatternViewController<SamplePatternDotView>!
+    var vc: SwiftyPatternLock<SamplePatternDotView>!
 //    var vc: PatternViewController<SamplePatternSquareView>!
     var pattern: [Int]!
 
@@ -27,18 +47,7 @@ final class SampleViewController: UIViewController {
     }
 
     func addPatternVC() {
-        vc = PatternViewController<SamplePatternDotView>()
-//        vc = PatternViewController<SamplePatternSquareView>()
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(vc.view)
-        NSLayoutConstraint.activate([
-            vc.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            vc.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            vc.view.topAnchor.constraint(equalTo: containerView.topAnchor),
-            vc.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-            ])
-
-        addChild(vc)
+        vc = addContainedChildViewController(SwiftyPatternLock<SamplePatternDotView>.self, onView: containerView)
         vc.delegate = self
     }
 

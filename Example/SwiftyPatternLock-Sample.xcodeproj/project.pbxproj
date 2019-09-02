@@ -16,8 +16,8 @@
 		1F9EA21C231C385B0097968B /* SamplePatternViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EA21B231C385B0097968B /* SamplePatternViewController.swift */; };
 		1F9EA21E231C46260097968B /* SamplePatternDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EA21D231C46260097968B /* SamplePatternDotView.swift */; };
 		1F9EA220231C46880097968B /* SamplePatternSquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */; };
-		A95123F72D594AD42D8E2F57 /* libPods-PatternView-Sample-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AA9FE4442601FAD66E384B1 /* libPods-PatternView-Sample-Tests.a */; };
-		B3A8F3C0943900C61EC86C00 /* libPods-PatternView-Sample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69ECD7CBFDC391EC12E5F75E /* libPods-PatternView-Sample.a */; };
+		96159CE872CF0C2CC9226B51 /* libPods-SwiftyPatternLock-Sample-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA079E43B74E159DD2CF056F /* libPods-SwiftyPatternLock-Sample-Tests.a */; };
+		BBEAF68626F55C2DE64F65A1 /* libPods-SwiftyPatternLock-Sample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C79BCFBC4A57BE44FAA5BA /* libPods-SwiftyPatternLock-Sample.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,16 +40,17 @@
 /* Begin PBXFileReference section */
 		003190FD98D8644A0759FC2A /* Pods-PatternView-Sample-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView-Sample-Tests.release.xcconfig"; path = "Target Support Files/Pods-PatternView-Sample-Tests/Pods-PatternView-Sample-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		05A51CBD5AF7FAA0D2F658A2 /* Pods-PatternView-Sample-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView-Sample-Tests.debug.xcconfig"; path = "Target Support Files/Pods-PatternView-Sample-Tests/Pods-PatternView-Sample-Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		07EA7C9B4EAFFAD29E0FE3EB /* Pods-SwiftyPatternLock-Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyPatternLock-Sample.debug.xcconfig"; path = "Target Support Files/Pods-SwiftyPatternLock-Sample/Pods-SwiftyPatternLock-Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		106C00E7ECB78E3C6F5C09B0 /* Pods-PatternView-Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView-Sample.debug.xcconfig"; path = "Target Support Files/Pods-PatternView-Sample/Pods-PatternView-Sample.debug.xcconfig"; sourceTree = "<group>"; };
-		1F33AA4A231B206800FE899A /* PatternView-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PatternView-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F33AA4A231B206800FE899A /* SwiftyPatternLock-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftyPatternLock-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F33AA4D231B206800FE899A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F33AA54231B206A00FE899A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F33AA57231B206A00FE899A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1F33AA59231B206A00FE899A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F33AA5E231B206A00FE899A /* PatternView-Sample-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PatternView-Sample-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F33AA5E231B206A00FE899A /* SwiftyPatternLock-Sample-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftyPatternLock-Sample-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F33AA62231B206A00FE899A /* PatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternTests.swift; sourceTree = "<group>"; };
 		1F33AA64231B206A00FE899A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F33AA69231B206A00FE899A /* PatternView-SampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "PatternView-SampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F33AA69231B206A00FE899A /* SwiftyPatternLock-SampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftyPatternLock-SampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F33AA6D231B206A00FE899A /* PatternUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternUITests.swift; sourceTree = "<group>"; };
 		1F33AA6F231B206A00FE899A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F68767B231C328F00003A9A /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SampleCode.xcconfig; sourceTree = "<group>"; };
@@ -58,12 +59,15 @@
 		1F9EA21D231C46260097968B /* SamplePatternDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePatternDotView.swift; sourceTree = "<group>"; };
 		1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePatternSquareView.swift; sourceTree = "<group>"; };
 		2FECAD394C5D499E6CE63D6A /* Pods-PatternView_Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView_Sample.debug.xcconfig"; path = "Target Support Files/Pods-PatternView_Sample/Pods-PatternView_Sample.debug.xcconfig"; sourceTree = "<group>"; };
+		47629BF48A79401F33121C26 /* Pods-SwiftyPatternLock-Sample-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyPatternLock-Sample-Tests.debug.xcconfig"; path = "Target Support Files/Pods-SwiftyPatternLock-Sample-Tests/Pods-SwiftyPatternLock-Sample-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		493F38929F01B04D8C1967DB /* Pods-PatternView-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView-Sample.release.xcconfig"; path = "Target Support Files/Pods-PatternView-Sample/Pods-PatternView-Sample.release.xcconfig"; sourceTree = "<group>"; };
-		4AA9FE4442601FAD66E384B1 /* libPods-PatternView-Sample-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PatternView-Sample-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6171DC9CF51DE392F100A178 /* Pods-PatternView_Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView_Sample.release.xcconfig"; path = "Target Support Files/Pods-PatternView_Sample/Pods-PatternView_Sample.release.xcconfig"; sourceTree = "<group>"; };
-		69ECD7CBFDC391EC12E5F75E /* libPods-PatternView-Sample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PatternView-Sample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		71C79BCFBC4A57BE44FAA5BA /* libPods-SwiftyPatternLock-Sample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwiftyPatternLock-Sample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E8B84262E15B15EA69B6097 /* Pods-PatternView_Sample_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView_Sample_Tests.release.xcconfig"; path = "Target Support Files/Pods-PatternView_Sample_Tests/Pods-PatternView_Sample_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		9267EBD2A8E70007EFBB3C3B /* Pods-PatternView_Sample_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PatternView_Sample_Tests.debug.xcconfig"; path = "Target Support Files/Pods-PatternView_Sample_Tests/Pods-PatternView_Sample_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		CB779ACE0E783046F87B3A14 /* Pods-SwiftyPatternLock-Sample-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyPatternLock-Sample-Tests.release.xcconfig"; path = "Target Support Files/Pods-SwiftyPatternLock-Sample-Tests/Pods-SwiftyPatternLock-Sample-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		DA079E43B74E159DD2CF056F /* libPods-SwiftyPatternLock-Sample-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SwiftyPatternLock-Sample-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD2EFCBB6C6D90EC16664224 /* Pods-SwiftyPatternLock-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyPatternLock-Sample.release.xcconfig"; path = "Target Support Files/Pods-SwiftyPatternLock-Sample/Pods-SwiftyPatternLock-Sample.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3A8F3C0943900C61EC86C00 /* libPods-PatternView-Sample.a in Frameworks */,
+				BBEAF68626F55C2DE64F65A1 /* libPods-SwiftyPatternLock-Sample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A95123F72D594AD42D8E2F57 /* libPods-PatternView-Sample-Tests.a in Frameworks */,
+				96159CE872CF0C2CC9226B51 /* libPods-SwiftyPatternLock-Sample-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,9 +113,9 @@
 		1F33AA4B231B206800FE899A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1F33AA4A231B206800FE899A /* PatternView-Sample.app */,
-				1F33AA5E231B206A00FE899A /* PatternView-Sample-Tests.xctest */,
-				1F33AA69231B206A00FE899A /* PatternView-SampleUITests.xctest */,
+				1F33AA4A231B206800FE899A /* SwiftyPatternLock-Sample.app */,
+				1F33AA5E231B206A00FE899A /* SwiftyPatternLock-Sample-Tests.xctest */,
+				1F33AA69231B206A00FE899A /* SwiftyPatternLock-SampleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,8 +125,7 @@
 			children = (
 				1F33AA4D231B206800FE899A /* AppDelegate.swift */,
 				1F9EA21B231C385B0097968B /* SamplePatternViewController.swift */,
-				1F9EA21D231C46260097968B /* SamplePatternDotView.swift */,
-				1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */,
+				1F35DCCE231D698200ADAAAF /* Sample Views */,
 				1F9EA219231C380C0097968B /* Sample.storyboard */,
 				1F33AA54231B206A00FE899A /* Assets.xcassets */,
 				1F33AA56231B206A00FE899A /* LaunchScreen.storyboard */,
@@ -149,6 +152,15 @@
 			path = PatternUITests;
 			sourceTree = "<group>";
 		};
+		1F35DCCE231D698200ADAAAF /* Sample Views */ = {
+			isa = PBXGroup;
+			children = (
+				1F9EA21D231C46260097968B /* SamplePatternDotView.swift */,
+				1F9EA21F231C46880097968B /* SamplePatternSquareView.swift */,
+			);
+			path = "Sample Views";
+			sourceTree = "<group>";
+		};
 		1F68767A231C328100003A9A /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,8 +172,8 @@
 		64A17DA9915D6485D3D85976 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				69ECD7CBFDC391EC12E5F75E /* libPods-PatternView-Sample.a */,
-				4AA9FE4442601FAD66E384B1 /* libPods-PatternView-Sample-Tests.a */,
+				71C79BCFBC4A57BE44FAA5BA /* libPods-SwiftyPatternLock-Sample.a */,
+				DA079E43B74E159DD2CF056F /* libPods-SwiftyPatternLock-Sample-Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -177,6 +189,10 @@
 				493F38929F01B04D8C1967DB /* Pods-PatternView-Sample.release.xcconfig */,
 				05A51CBD5AF7FAA0D2F658A2 /* Pods-PatternView-Sample-Tests.debug.xcconfig */,
 				003190FD98D8644A0759FC2A /* Pods-PatternView-Sample-Tests.release.xcconfig */,
+				07EA7C9B4EAFFAD29E0FE3EB /* Pods-SwiftyPatternLock-Sample.debug.xcconfig */,
+				FD2EFCBB6C6D90EC16664224 /* Pods-SwiftyPatternLock-Sample.release.xcconfig */,
+				47629BF48A79401F33121C26 /* Pods-SwiftyPatternLock-Sample-Tests.debug.xcconfig */,
+				CB779ACE0E783046F87B3A14 /* Pods-SwiftyPatternLock-Sample-Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -184,9 +200,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1F33AA49231B206800FE899A /* PatternView-Sample */ = {
+		1F33AA49231B206800FE899A /* SwiftyPatternLock-Sample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F33AA72231B206A00FE899A /* Build configuration list for PBXNativeTarget "PatternView-Sample" */;
+			buildConfigurationList = 1F33AA72231B206A00FE899A /* Build configuration list for PBXNativeTarget "SwiftyPatternLock-Sample" */;
 			buildPhases = (
 				E3CE62638AEEEF913C0594DA /* [CP] Check Pods Manifest.lock */,
 				1F33AA46231B206800FE899A /* Sources */,
@@ -197,14 +213,14 @@
 			);
 			dependencies = (
 			);
-			name = "PatternView-Sample";
+			name = "SwiftyPatternLock-Sample";
 			productName = Pattern;
-			productReference = 1F33AA4A231B206800FE899A /* PatternView-Sample.app */;
+			productReference = 1F33AA4A231B206800FE899A /* SwiftyPatternLock-Sample.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1F33AA5D231B206A00FE899A /* PatternView-Sample-Tests */ = {
+		1F33AA5D231B206A00FE899A /* SwiftyPatternLock-Sample-Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F33AA75231B206A00FE899A /* Build configuration list for PBXNativeTarget "PatternView-Sample-Tests" */;
+			buildConfigurationList = 1F33AA75231B206A00FE899A /* Build configuration list for PBXNativeTarget "SwiftyPatternLock-Sample-Tests" */;
 			buildPhases = (
 				47DE996DE38C4A629E51CB94 /* [CP] Check Pods Manifest.lock */,
 				1F33AA5A231B206A00FE899A /* Sources */,
@@ -216,14 +232,14 @@
 			dependencies = (
 				1F33AA60231B206A00FE899A /* PBXTargetDependency */,
 			);
-			name = "PatternView-Sample-Tests";
+			name = "SwiftyPatternLock-Sample-Tests";
 			productName = PatternTests;
-			productReference = 1F33AA5E231B206A00FE899A /* PatternView-Sample-Tests.xctest */;
+			productReference = 1F33AA5E231B206A00FE899A /* SwiftyPatternLock-Sample-Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1F33AA68231B206A00FE899A /* PatternView-SampleUITests */ = {
+		1F33AA68231B206A00FE899A /* SwiftyPatternLock-SampleUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1F33AA78231B206A00FE899A /* Build configuration list for PBXNativeTarget "PatternView-SampleUITests" */;
+			buildConfigurationList = 1F33AA78231B206A00FE899A /* Build configuration list for PBXNativeTarget "SwiftyPatternLock-SampleUITests" */;
 			buildPhases = (
 				1F33AA65231B206A00FE899A /* Sources */,
 				1F33AA66231B206A00FE899A /* Frameworks */,
@@ -234,9 +250,9 @@
 			dependencies = (
 				1F33AA6B231B206A00FE899A /* PBXTargetDependency */,
 			);
-			name = "PatternView-SampleUITests";
+			name = "SwiftyPatternLock-SampleUITests";
 			productName = PatternUITests;
-			productReference = 1F33AA69231B206A00FE899A /* PatternView-SampleUITests.xctest */;
+			productReference = 1F33AA69231B206A00FE899A /* SwiftyPatternLock-SampleUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -262,7 +278,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1F33AA45231B206800FE899A /* Build configuration list for PBXProject "PatternView-Sample" */;
+			buildConfigurationList = 1F33AA45231B206800FE899A /* Build configuration list for PBXProject "SwiftyPatternLock-Sample" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -275,9 +291,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1F33AA49231B206800FE899A /* PatternView-Sample */,
-				1F33AA5D231B206A00FE899A /* PatternView-Sample-Tests */,
-				1F33AA68231B206A00FE899A /* PatternView-SampleUITests */,
+				1F33AA49231B206800FE899A /* SwiftyPatternLock-Sample */,
+				1F33AA5D231B206A00FE899A /* SwiftyPatternLock-Sample-Tests */,
+				1F33AA68231B206A00FE899A /* SwiftyPatternLock-SampleUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -325,7 +341,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PatternView-Sample-Tests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-SwiftyPatternLock-Sample-Tests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -347,7 +363,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PatternView-Sample-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-SwiftyPatternLock-Sample-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -389,12 +405,12 @@
 /* Begin PBXTargetDependency section */
 		1F33AA60231B206A00FE899A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1F33AA49231B206800FE899A /* PatternView-Sample */;
+			target = 1F33AA49231B206800FE899A /* SwiftyPatternLock-Sample */;
 			targetProxy = 1F33AA5F231B206A00FE899A /* PBXContainerItemProxy */;
 		};
 		1F33AA6B231B206A00FE899A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1F33AA49231B206800FE899A /* PatternView-Sample */;
+			target = 1F33AA49231B206800FE899A /* SwiftyPatternLock-Sample */;
 			targetProxy = 1F33AA6A231B206A00FE899A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -529,7 +545,7 @@
 		};
 		1F33AA73231B206A00FE899A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 106C00E7ECB78E3C6F5C09B0 /* Pods-PatternView-Sample.debug.xcconfig */;
+			baseConfigurationReference = 07EA7C9B4EAFFAD29E0FE3EB /* Pods-SwiftyPatternLock-Sample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -549,7 +565,7 @@
 		};
 		1F33AA74231B206A00FE899A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 493F38929F01B04D8C1967DB /* Pods-PatternView-Sample.release.xcconfig */;
+			baseConfigurationReference = FD2EFCBB6C6D90EC16664224 /* Pods-SwiftyPatternLock-Sample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -569,7 +585,7 @@
 		};
 		1F33AA76231B206A00FE899A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 05A51CBD5AF7FAA0D2F658A2 /* Pods-PatternView-Sample-Tests.debug.xcconfig */;
+			baseConfigurationReference = 47629BF48A79401F33121C26 /* Pods-SwiftyPatternLock-Sample-Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -585,13 +601,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PatternView-Sample.app/PatternView-Sample";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftyPatternLock-Sample.app/SwiftyPatternLock-Sample";
 			};
 			name = Debug;
 		};
 		1F33AA77231B206A00FE899A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 003190FD98D8644A0759FC2A /* Pods-PatternView-Sample-Tests.release.xcconfig */;
+			baseConfigurationReference = CB779ACE0E783046F87B3A14 /* Pods-SwiftyPatternLock-Sample-Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -607,7 +623,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PatternView-Sample.app/PatternView-Sample";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftyPatternLock-Sample.app/SwiftyPatternLock-Sample";
 			};
 			name = Release;
 		};
@@ -654,7 +670,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1F33AA45231B206800FE899A /* Build configuration list for PBXProject "PatternView-Sample" */ = {
+		1F33AA45231B206800FE899A /* Build configuration list for PBXProject "SwiftyPatternLock-Sample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F33AA70231B206A00FE899A /* Debug */,
@@ -663,7 +679,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F33AA72231B206A00FE899A /* Build configuration list for PBXNativeTarget "PatternView-Sample" */ = {
+		1F33AA72231B206A00FE899A /* Build configuration list for PBXNativeTarget "SwiftyPatternLock-Sample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F33AA73231B206A00FE899A /* Debug */,
@@ -672,7 +688,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F33AA75231B206A00FE899A /* Build configuration list for PBXNativeTarget "PatternView-Sample-Tests" */ = {
+		1F33AA75231B206A00FE899A /* Build configuration list for PBXNativeTarget "SwiftyPatternLock-Sample-Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F33AA76231B206A00FE899A /* Debug */,
@@ -681,7 +697,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F33AA78231B206A00FE899A /* Build configuration list for PBXNativeTarget "PatternView-SampleUITests" */ = {
+		1F33AA78231B206A00FE899A /* Build configuration list for PBXNativeTarget "SwiftyPatternLock-SampleUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1F33AA79231B206A00FE899A /* Debug */,

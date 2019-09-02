@@ -1,9 +1,9 @@
 #use_frameworks!
 
-target 'PatternView-Sample' do
-  pod 'PatternViewController', :path => '../'
+target 'SwiftyPatternLock-Sample' do
+  pod 'SwiftyPatternLock', :path => '../'
 
-  target 'PatternView-Sample-Tests' do
+  target 'SwiftyPatternLock-Sample-Tests' do
     inherit! :search_paths
 
     

@@ -1,16 +1,16 @@
 PODS:
-  - PatternViewController (0.1.0)
+  - SwiftyPatternLock (0.1.0)
 
 DEPENDENCIES:
-  - PatternViewController (from `../`)
+  - SwiftyPatternLock (from `../`)
 
 EXTERNAL SOURCES:
-  PatternViewController:
+  SwiftyPatternLock:
     :path: "../"
 
 SPEC CHECKSUMS:
-  PatternViewController: ae5cdfb1d08824c1ae5574e10d640ec60cbd2295
+  SwiftyPatternLock: 7572b03dbf9805919f86800decb5824db2d61176
 
-PODFILE CHECKSUM: 05cfb9e7d97e559a5c85ac7b0312a451fd80a52a
+PODFILE CHECKSUM: a8afeee6f2789a7ba75ee7146b6ec084c070564c
 
 COCOAPODS: 1.7.5

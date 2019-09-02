@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F33AA49231B206800FE899A"
-               BuildableName = "PatternView-Sample.app"
-               BlueprintName = "PatternView-Sample"
-               ReferencedContainer = "container:PatternView-Sample.xcodeproj">
+               BuildableName = "SwiftyPatternLock-Sample.app"
+               BlueprintName = "SwiftyPatternLock-Sample"
+               ReferencedContainer = "container:SwiftyPatternLock-Sample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F33AA5D231B206A00FE899A"
-               BuildableName = "PatternView-Sample-Tests.xctest"
-               BlueprintName = "PatternView-Sample-Tests"
-               ReferencedContainer = "container:PatternView-Sample.xcodeproj">
+               BuildableName = "SwiftyPatternLock-Sample-Tests.xctest"
+               BlueprintName = "SwiftyPatternLock-Sample-Tests"
+               ReferencedContainer = "container:SwiftyPatternLock-Sample.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F33AA68231B206A00FE899A"
-               BuildableName = "PatternView-SampleUITests.xctest"
-               BlueprintName = "PatternView-SampleUITests"
-               ReferencedContainer = "container:PatternView-Sample.xcodeproj">
+               BuildableName = "SwiftyPatternLock-SampleUITests.xctest"
+               BlueprintName = "SwiftyPatternLock-SampleUITests"
+               ReferencedContainer = "container:SwiftyPatternLock-Sample.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +53,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F33AA49231B206800FE899A"
-            BuildableName = "PatternView-Sample.app"
-            BlueprintName = "PatternView-Sample"
-            ReferencedContainer = "container:PatternView-Sample.xcodeproj">
+            BuildableName = "SwiftyPatternLock-Sample.app"
+            BlueprintName = "SwiftyPatternLock-Sample"
+            ReferencedContainer = "container:SwiftyPatternLock-Sample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F33AA49231B206800FE899A"
-            BuildableName = "PatternView-Sample.app"
-            BlueprintName = "PatternView-Sample"
-            ReferencedContainer = "container:PatternView-Sample.xcodeproj">
+            BuildableName = "SwiftyPatternLock-Sample.app"
+            BlueprintName = "SwiftyPatternLock-Sample"
+            ReferencedContainer = "container:SwiftyPatternLock-Sample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1F33AA49231B206800FE899A"
-            BuildableName = "PatternView-Sample.app"
-            BlueprintName = "PatternView-Sample"
-            ReferencedContainer = "container:PatternView-Sample.xcodeproj">
+            BuildableName = "SwiftyPatternLock-Sample.app"
+            BlueprintName = "SwiftyPatternLock-Sample"
+            ReferencedContainer = "container:SwiftyPatternLock-Sample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
