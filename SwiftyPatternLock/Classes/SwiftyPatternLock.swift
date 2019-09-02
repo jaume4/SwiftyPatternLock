@@ -75,8 +75,6 @@ public class SwiftyPatternLock<T: PatternContainedView>: UIViewController {
     private var locationOfBeganTap: CGPoint!
     private var locationOfEndTap: CGPoint!
     private var recalculatedCenters = false
-    private var widthAnchor: NSLayoutConstraint!
-    private var heightAnchor: NSLayoutConstraint!
 
     private var config: PatternViewConfig!
     private var parentStack: UIStackView!
@@ -100,9 +98,6 @@ public class SwiftyPatternLock<T: PatternContainedView>: UIViewController {
 
         recalculatedCenters = false
         DispatchQueue.main.async {
-            let isHigh = self.view.bounds.width < self.view.bounds.height
-            self.widthAnchor.isActive = isHigh
-            self.heightAnchor.isActive = !isHigh
             self.calculatePointCenters()
             if let drawingLayer = self.drawingLayer, let points = self.passedPointsIndices, let path = self.calculatePath(for: points) { //Recalculate path
                 drawingLayer.path = path.cgPath
@@ -149,9 +144,11 @@ public class SwiftyPatternLock<T: PatternContainedView>: UIViewController {
         parentStack.axis = .vertical
         parentStack.distribution = .fillEqually
         view.addSubview(parentStack)
-        heightAnchor = parentStack.heightAnchor.constraint(equalTo: view.heightAnchor)
-        widthAnchor = parentStack.widthAnchor.constraint(equalTo: view.widthAnchor)
+        let widthConstraint = parentStack.widthAnchor.constraint(equalTo: view.widthAnchor)
+        widthConstraint.priority = UILayoutPriority.defaultHigh
         NSLayoutConstraint.activate([
+            widthConstraint,
+            parentStack.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor),
             parentStack.widthAnchor.constraint(equalTo: parentStack.heightAnchor),
             parentStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             parentStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
