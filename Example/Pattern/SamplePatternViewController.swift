@@ -14,8 +14,8 @@ final class SampleViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
 
 //    Provide a PatternContainedView
-//    var vc: PatternViewController<SamplePatternView>!
-    var vc: PatternViewController<SamplePatternSquareView>!
+    var vc: PatternViewController<SamplePatternDotView>!
+//    var vc: PatternViewController<SamplePatternSquareView>!
     var pattern: [Int]!
 
     override func viewDidLoad() {
@@ -27,8 +27,8 @@ final class SampleViewController: UIViewController {
     }
 
     func addPatternVC() {
-//        vc = PatternViewController<SamplePatternDotView>()
-        vc = PatternViewController<SamplePatternSquareView>()
+        vc = PatternViewController<SamplePatternDotView>()
+//        vc = PatternViewController<SamplePatternSquareView>()
         vc.view.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(vc.view)
         NSLayoutConstraint.activate([
@@ -44,7 +44,12 @@ final class SampleViewController: UIViewController {
 
     func configPatternVC() {
 
-        let config = PatternViewConfig(backroundColor: .white, lineWidth: 4, lineDefaultColor: UIColor.darkGray.cgColor, lineValidColor: UIColor.green.cgColor, lineInvalidColor: UIColor.red.cgColor, numberOfItemsPerRow: 4)
+        let config = PatternViewConfig(backroundColor: .white,
+                                       lineWidth: 4,
+                                       lineDefaultColor: UIColor.darkGray.cgColor,
+                                       lineValidColor: UIColor.green.cgColor,
+                                       lineInvalidColor: UIColor.red.cgColor,
+                                       numberOfItemsPerRow: 3)
         vc.setup(config)
 
     }
@@ -60,7 +65,16 @@ final class SampleViewController: UIViewController {
 
     @IBAction func showLast(_ sender: Any) {
         guard let pattern = pattern else { return }
-        vc.functionality = .viewPattern(pattern)
+        vc.functionality = .viewPattern((pattern: pattern, animated: false))
+    }
+
+    @IBAction func showLastAnimated(_ sender: Any) {
+        guard let pattern = pattern else { return }
+        vc.functionality = .viewPattern((pattern: pattern, animated: true))
+    }
+
+    @IBAction func clearPattern(_ sender: Any) {
+        vc.clearPattern()
     }
 
 }

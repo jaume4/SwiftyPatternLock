@@ -26,7 +26,7 @@ extension CGRect {
 typealias IntPoint = (x: Int, y: Int)
 
 public enum PatternFunctionality {
-    case createPattern(Int), checkPattern([Int]), viewPattern([Int])
+    case createPattern(Int), checkPattern([Int]), viewPattern((pattern: [Int], animated: Bool))
 }
 
 public struct PatternViewConfig {
@@ -121,6 +121,10 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         addSubViews()
     }
 
+    public func clearPattern() {
+        resetViews()
+    }
+
     func addSubViews() {
 
         var stacks = [UIStackView]()
@@ -168,9 +172,9 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
 
     func updateViews() {
 
-        if case .viewPattern(let pattern)? = functionality {
+        if case .viewPattern(let viewPatternConfig)? = functionality {
             resetViews()
-            passedPointsIndices = pattern
+            passedPointsIndices = viewPatternConfig.pattern
             draw(indices: passedPointsIndices)
         } else {
             resetViews()
@@ -301,13 +305,14 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         let sum = distances.reduce(0, {$0 + $1})
         var totalSum = 0.0
 
-        let animate: Bool
+        let shouldAnimate: Bool
 
         //Animation
-        if case .viewPattern(let pattern)? = functionality {
+        if case .viewPattern(let viewPatternConfig)? = functionality {
 
-            animate = true
-            let patternSet = Set(pattern)
+            let patternSet = Set(viewPatternConfig.pattern)
+            let pattern = viewPatternConfig.pattern
+            shouldAnimate = viewPatternConfig.animated
 
             guard patternSet.count == pattern.count,
                 let max = pattern.max(), max < gridSize * gridSize,
@@ -324,20 +329,24 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
 
             passedPointsIndices = pattern
 
-            let pathAnimation = CAKeyframeAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
-            let values: [NSNumber] = distances.map {
+            if shouldAnimate {
 
-                totalSum += $0
-                return NSNumber(value: totalSum / sum)
+                let pathAnimation = CAKeyframeAnimation(keyPath: #keyPath(CAShapeLayer.strokeEnd))
+                let values: [NSNumber] = distances.map {
+
+                    totalSum += $0
+                    return NSNumber(value: totalSum / sum)
+
+                }
+
+                pathAnimation.keyTimes = values
+                pathAnimation.values = values
+                pathAnimation.duration = Double(passedPointsIndices.count) * animationBaseDuration
+                drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
 
             }
-
-            pathAnimation.keyTimes = values
-            pathAnimation.values = values
-            pathAnimation.duration = Double(passedPointsIndices.count) * animationBaseDuration
-            drawingLayer.add(pathAnimation, forKey: #keyPath(CAShapeLayer.path))
         } else {
-            animate = false
+            shouldAnimate = false
         }
 
         CATransaction.begin()
@@ -353,10 +362,10 @@ public class PatternViewController<T: PatternContainedView>: UIViewController {
         passedPointsIndices.enumerated().forEach { (offset, element) in
 
             let view = patternDotViews[element]
-            UIView.animate(withDuration: animationBaseDuration, delay: animate ? (delays[offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
+            UIView.animate(withDuration: animationBaseDuration, delay: shouldAnimate ? (delays[offset] - 0.1) : 0, options: .overrideInheritedDuration, animations: {
                 view.update(state: .selected)
-            }, completion: { [weak self] _ in
-                if animate && offset + 1 == self?.passedPointsIndices?.count { //Shown last pattern dot
+            }, completion: { [weak self] completed in
+                if completed, shouldAnimate && offset + 1 == self?.passedPointsIndices?.count { //Shown last pattern dot
                     self?.delegate?.endedShowingPattern()
                 }
             })

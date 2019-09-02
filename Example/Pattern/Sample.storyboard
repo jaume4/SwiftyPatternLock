@@ -22,30 +22,54 @@
                                 <rect key="frame" x="0.0" y="224" width="414" height="448"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Vln-33-7mr">
-                                <rect key="frame" x="94.5" y="724" width="225" height="30"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Vln-33-7mr">
+                                <rect key="frame" x="94.5" y="724" width="225" height="80"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vSO-Ax-lZ9">
-                                        <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
-                                        <state key="normal" title="Create"/>
-                                        <connections>
-                                            <action selector="create:" destination="uu1-mr-DdV" eventType="touchUpInside" id="zpt-Ob-DP9"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h3s-7E-Q45" userLabel="Check last">
-                                        <rect key="frame" x="66" y="0.0" width="72" height="30"/>
-                                        <state key="normal" title="Check last"/>
-                                        <connections>
-                                            <action selector="checkLast:" destination="uu1-mr-DdV" eventType="touchUpInside" id="aNP-R6-0jD"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QH5-g5-3CT" userLabel="Show last">
-                                        <rect key="frame" x="158" y="0.0" width="67" height="30"/>
-                                        <state key="normal" title="Show last"/>
-                                        <connections>
-                                            <action selector="showLast:" destination="uu1-mr-DdV" eventType="touchUpInside" id="RVM-Ip-xDU"/>
-                                        </connections>
-                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="757-eB-MCX">
+                                        <rect key="frame" x="0.0" y="0.0" width="225" height="30"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vSO-Ax-lZ9">
+                                                <rect key="frame" x="0.0" y="0.0" width="46" height="30"/>
+                                                <state key="normal" title="Create"/>
+                                                <connections>
+                                                    <action selector="create:" destination="uu1-mr-DdV" eventType="touchUpInside" id="zpt-Ob-DP9"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h3s-7E-Q45" userLabel="Check last">
+                                                <rect key="frame" x="66" y="0.0" width="72" height="30"/>
+                                                <state key="normal" title="Check last"/>
+                                                <connections>
+                                                    <action selector="checkLast:" destination="uu1-mr-DdV" eventType="touchUpInside" id="aNP-R6-0jD"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QH5-g5-3CT" userLabel="Show last">
+                                                <rect key="frame" x="158" y="0.0" width="67" height="30"/>
+                                                <state key="normal" title="Show last"/>
+                                                <connections>
+                                                    <action selector="showLast:" destination="uu1-mr-DdV" eventType="touchUpInside" id="RVM-Ip-xDU"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="TVK-Fc-NPR">
+                                        <rect key="frame" x="0.0" y="50" width="225" height="30"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="knE-cq-BP4">
+                                                <rect key="frame" x="0.0" y="0.0" width="169" height="30"/>
+                                                <state key="normal" title="Show last animated"/>
+                                                <connections>
+                                                    <action selector="showLastAnimated:" destination="uu1-mr-DdV" eventType="touchUpInside" id="STR-rk-JKc"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bfN-P6-Q3N">
+                                                <rect key="frame" x="189" y="0.0" width="36" height="30"/>
+                                                <state key="normal" title="Clear"/>
+                                                <connections>
+                                                    <action selector="clearPattern:" destination="uu1-mr-DdV" eventType="touchUpInside" id="Ny8-UL-x3H"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>
