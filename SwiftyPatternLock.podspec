@@ -24,7 +24,7 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/jaume4/SwiftyPatternLock'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'jaume4' => 'jaume4@gmail.com' }
+  s.author           = { 'Jaume Corbi' => 'jaume@corbi.co' }
   s.source           = { :git => 'https://github.com/jaume4/SwiftyPatternLock.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/jaume4>'
 
