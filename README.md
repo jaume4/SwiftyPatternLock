@@ -1,17 +1,46 @@
-# PatternViewController
+# Swifty Pattern ViewConstroller
 
-[![CI Status](https://img.shields.io/travis/jaume4/PatternViewController.svg?style=flat)](https://travis-ci.org/jaume4/PatternViewController)
 [![Version](https://img.shields.io/cocoapods/v/PatternViewController.svg?style=flat)](https://cocoapods.org/pods/PatternViewController)
 [![License](https://img.shields.io/cocoapods/l/PatternViewController.svg?style=flat)](https://cocoapods.org/pods/PatternViewController)
 [![Platform](https://img.shields.io/cocoapods/p/PatternViewController.svg?style=flat)](https://cocoapods.org/pods/PatternViewController)
+
+Swifty Pattern Lock is a simple Android-like Pattern Lock ViewController.
+
+## Features
+
+- [x] Autolayout
+- [x] Animates views state
+- [x] Interrumpible animations
+- [x] Accepts any custom view
+- [x] Any grid size > 2
+- [x] Interpolates points on diagonals and lines
+- [x] Create, view pattern, view pattern animated, check pattern functions
+
+## Requirements
+
+- iOS 9.0+
+- Xcode 10.1+
+- Swift 5 (Should be compatible with lower versions)
 
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-## Requirements
+## Usage
+
+### Init
+
+- For simple usage, a helper function `addContainedChildViewController<T>(_ vc: T.Type, onView: UIView)` as it needs to be added to a container view and as a child of the current ViewController, please see the sample project. `SamplePatternDotView` or `SamplePatternSquareView` are sample views ready to be used.
+
+- Alternatively, you can init it with `SwiftyPatternLock<TypeOfView>.init()` add to a container view and as a child of the host ViewController.
+
+### Setup
+
+Provide it with a `PatternViewConfig` with the `setup(_ config: PatternViewConfig)` function and provide it with a `PatternFunctionality` via it's `functionality` property.
 
 ## Installation
+
+### CocoaPods
 
 PatternViewController is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
@@ -19,6 +48,10 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod 'PatternViewController'
 ```
+
+### Manually
+
+Add the `SwiftyPatternLock.swift` to the project.
 
 ## Author
 
