@@ -7,24 +7,16 @@
 //
 
 import UIKit
+import SwiftyPatternLock
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var nav: UINavigationController!
-    var vc: ViewController!
-    var pattern: [Int]!
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        vc = ViewController.init()
-        vc.functionality = .createPattern(3)
-        vc.delegate = self
-        window?.rootViewController = vc
+        
         return true
     }
 
@@ -52,35 +44,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
-extension AppDelegate: PatternDelegate {
-    func created(pattern: [Int]) {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.vc.functionality = .checkPattern(pattern)
-            self.pattern = pattern
-        }
-
-    }
-
-    func failedCreatingPattern(lenght: Int) {
-    }
-
-    func introducedPattern(ok: Bool) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            if ok {
-                self.vc.functionality = .viewPattern(self.pattern)
-            } else {
-                self.vc.functionality = .createPattern(3)
-            }
-        }
-    }
-
-    func endedShowingPattern() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.vc.functionality = .createPattern(3)
-        }
-    }
-
-}
-

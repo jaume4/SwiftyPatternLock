@@ -1,0 +1,11 @@
+#use_frameworks!
+
+target 'SwiftyPatternLock-Sample' do
+  pod 'SwiftyPatternLock', :path => '../'
+
+  target 'SwiftyPatternLock-Sample-Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

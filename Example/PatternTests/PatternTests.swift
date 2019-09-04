@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Pattern
+@testable import PatternViewController
 
 class PatternTests: XCTestCase {
 
