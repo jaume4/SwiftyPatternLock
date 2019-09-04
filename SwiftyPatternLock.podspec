@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
+  s.swift_version = '5.0'
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
                        DESC
@@ -26,7 +27,7 @@ TODO: Add long description of the pod here.
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jaume Corbi' => 'jaume@corbi.co' }
   s.source           = { :git => 'https://github.com/jaume4/SwiftyPatternLock.git', :tag => s.version.to_s }
-  s.social_media_url = 'https://twitter.com/jaume4>'
+  s.social_media_url = 'https://twitter.com/jaume4'
 
   s.ios.deployment_target = '9.0'
 
