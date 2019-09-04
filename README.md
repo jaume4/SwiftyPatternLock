@@ -1,8 +1,8 @@
-# Swifty Pattern ViewConstroller
+# Swifty Pattern ViewController
 
-[![Version](https://img.shields.io/cocoapods/v/PatternViewController.svg?style=flat)](https://cocoapods.org/pods/PatternViewController)
-[![License](https://img.shields.io/cocoapods/l/PatternViewController.svg?style=flat)](https://cocoapods.org/pods/PatternViewController)
-[![Platform](https://img.shields.io/cocoapods/p/PatternViewController.svg?style=flat)](https://cocoapods.org/pods/PatternViewController)
+[![Version](https://img.shields.io/cocoapods/v/SwiftyPatternLock.svg?style=flat)](https://cocoapods.org/pods/SwiftyPatternLock)
+[![License](https://img.shields.io/cocoapods/l/SwiftyPatternLock.svg?style=flat)](https://cocoapods.org/pods/SwiftyPatternLock)
+[![Platform](https://img.shields.io/cocoapods/p/SwiftyPatternLock.svg?style=flat)](https://cocoapods.org/pods/SwiftyPatternLock)
 
 Swifty Pattern Lock is a simple Android-like Pattern Lock ViewController.
 
@@ -19,7 +19,7 @@ Swifty Pattern Lock is a simple Android-like Pattern Lock ViewController.
 ## Requirements
 
 - iOS 9.0+
-- Xcode 10.1+
+- Xcode 10.3+ (Should be compatible with lower versions)
 - Swift 5 (Should be compatible with lower versions)
 
 ## Example
@@ -42,11 +42,11 @@ Provide it with a `PatternViewConfig` with the `setup(_ config: PatternViewConfi
 
 ### CocoaPods
 
-PatternViewController is available through [CocoaPods](https://cocoapods.org). To install
+SwiftyPatternLock is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'PatternViewController'
+pod 'SwiftyPatternLock'
 ```
 
 ### Manually
@@ -59,4 +59,4 @@ jaume4, jaume4@gmail.com
 
 ## License
 
-PatternViewController is available under the MIT license. See the LICENSE file for more info.
+SwiftyPatternLock is available under the MIT license. See the LICENSE file for more info.
