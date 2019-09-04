@@ -2,11 +2,12 @@
 //  AppDelegate.swift
 //  Pattern
 //
-//  Created by jaume on 28/08/2019.
+//  Created by jaume on 31/08/2019.
 //  Copyright © 2019 Jaume. All rights reserved.
 //
 
 import UIKit
+import SwiftyPatternLock
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
         return true
     }
 
@@ -43,4 +44,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-

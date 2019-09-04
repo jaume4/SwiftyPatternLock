@@ -2,12 +2,12 @@
 //  PatternTests.swift
 //  PatternTests
 //
-//  Created by jaume on 28/08/2019.
+//  Created by jaume on 31/08/2019.
 //  Copyright © 2019 Jaume. All rights reserved.
 //
 
 import XCTest
-@testable import Pattern
+@testable import PatternViewController
 
 class PatternTests: XCTestCase {
 
