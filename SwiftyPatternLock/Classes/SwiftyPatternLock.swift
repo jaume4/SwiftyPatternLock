@@ -155,6 +155,7 @@ public class SwiftyPatternLock<T: PatternContainedView>: UIViewController {
             ])
 
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didMove(gesture:)))
+        panGesture.maximumNumberOfTouches = 1
         parentStack.addGestureRecognizer(panGesture)
     }
 
